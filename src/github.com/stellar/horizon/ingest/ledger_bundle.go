@@ -1,8 +1,8 @@
 package ingest
 
 import (
-	"github.com/stellar/go/support/db"
-	"github.com/stellar/go/support/errors"
+	"github.com/BlackBeetleHub/go/support/db"
+	"github.com/BlackBeetleHub/go/support/errors"
 	"github.com/stellar/horizon/db2/core"
 )
 

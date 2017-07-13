@@ -1,7 +1,7 @@
 package simplepath
 
 import (
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/paths"
 )
 

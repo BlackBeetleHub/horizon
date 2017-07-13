@@ -6,7 +6,7 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/stellar/go/build"
+	"github.com/BlackBeetleHub/go/build"
 	"github.com/stellar/horizon/test"
 	"github.com/stellar/horizon/txsub/sequence"
 )

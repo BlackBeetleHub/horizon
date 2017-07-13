@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/keypair"
-	"github.com/stellar/go/meta"
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/amount"
+	"github.com/BlackBeetleHub/go/keypair"
+	"github.com/BlackBeetleHub/go/meta"
+	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/ingest/participants"
 )

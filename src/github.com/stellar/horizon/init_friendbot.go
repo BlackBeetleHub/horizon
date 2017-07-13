@@ -1,7 +1,7 @@
 package horizon
 
 import (
-	"github.com/stellar/go/strkey"
+	"github.com/BlackBeetleHub/go/strkey"
 	"github.com/stellar/horizon/friendbot"
 )
 

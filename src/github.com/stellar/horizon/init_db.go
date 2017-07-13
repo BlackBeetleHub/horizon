@@ -1,7 +1,7 @@
 package horizon
 
 import (
-	"github.com/stellar/go/support/db"
+	"github.com/BlackBeetleHub/go/support/db"
 	"github.com/stellar/horizon/db2/core"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/log"

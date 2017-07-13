@@ -3,8 +3,8 @@ package resource
 import (
 	"fmt"
 
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/amount"
+	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/httpx"
 	"github.com/stellar/horizon/render/hal"

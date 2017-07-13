@@ -5,7 +5,7 @@ import (
 	"math/big"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/assets"
 	"github.com/stellar/horizon/db2/core"
 )

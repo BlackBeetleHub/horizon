@@ -7,8 +7,8 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/guregu/null"
-	"github.com/stellar/go/support/db"
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/support/db"
+	"github.com/BlackBeetleHub/go/xdr"
 )
 
 const (

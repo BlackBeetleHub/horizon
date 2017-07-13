@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;horizon&gt;">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../golibs/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/goji.io" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/github.com" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../golibs/src/gopkg.in" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/golang.org" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/goji.io" />
+      <root url="file://$PROJECT_DIR$/../../golibs/src/github.com" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>

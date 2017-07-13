@@ -5,8 +5,8 @@ package resource
 import (
 	"time"
 
-	"github.com/stellar/go/strkey"
-	"github.com/stellar/go/support/errors"
+	"github.com/BlackBeetleHub/go/strkey"
+	"github.com/BlackBeetleHub/go/support/errors"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/render/hal"
 	"github.com/stellar/horizon/resource/base"

@@ -3,8 +3,8 @@ package ingest
 import (
 	"testing"
 
-	"github.com/stellar/go/support/db"
-	"github.com/stellar/go/xdr"
+	"github.com/BlackBeetleHub/go/support/db"
+	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/db2/core"
 	testDB "github.com/stellar/horizon/test/db"
 	"github.com/stretchr/testify/assert"

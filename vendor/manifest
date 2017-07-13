@@ -416,8 +416,8 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/stellar/go",
-			"repository": "https://github.com/stellar/go",
+			"importpath": "github.com/BlackBeetleHub/go",
+			"repository": "https://github.com/BlackBeetleHub/go",
 			"revision": "79fa0dbbbc5a16ec5c9673929a0cad2ee381e2fe",
 			"branch": "master"
 		},

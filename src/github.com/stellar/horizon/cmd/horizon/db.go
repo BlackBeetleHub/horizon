@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/stellar/go/support/db"
+	"github.com/BlackBeetleHub/go/support/db"
 	"github.com/stellar/horizon/db2/schema"
 	"github.com/stellar/horizon/ingest"
 	hlog "github.com/stellar/horizon/log"

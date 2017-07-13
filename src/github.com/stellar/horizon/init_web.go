@@ -98,6 +98,7 @@ func initWebActions(app *App) {
 	r.Get("/transactions/:tx_id/payments", &PaymentsIndexAction{})
 	r.Get("/transactions/:tx_id/effects", &EffectIndexAction{})
 
+	r.Get
 	// operation actions
 	r.Get("/operations", &OperationIndexAction{})
 	r.Get("/operations/:id", &OperationShowAction{})

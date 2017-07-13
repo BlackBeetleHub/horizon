@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/stellar/go/support/errors"
+	"github.com/BlackBeetleHub/go/support/errors"
 	"github.com/stellar/horizon/db2"
 )
 
