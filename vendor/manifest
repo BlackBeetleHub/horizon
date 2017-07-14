@@ -20,15 +20,15 @@
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/Sirupsen/logrus",
-			"repository": "https://github.com/Sirupsen/logrus",
-			"revision": "a283a10442df8dc09befd873fab202bf8a253d6a",
+			"importpath": "github.com/sirupsen/logrus",
+			"repository": "https://github.com/sirupsen/logrus",
+			"revision": "68cec9f21fbf3ea8d8f98c044bc6ce05f17b267a",
 			"branch": "master"
 		},
 		{
-			"importpath": "github.com/Sirupsen/logrus/hooks/test",
-			"repository": "https://github.com/Sirupsen/logrus",
-			"revision": "a283a10442df8dc09befd873fab202bf8a253d6a",
+			"importpath": "github.com/sirupsen/logrus/hooks/test",
+			"repository": "https://github.com/sirupsen/logrus",
+			"revision": "68cec9f21fbf3ea8d8f98c044bc6ce05f17b267a",
 			"branch": "master",
 			"path": "/hooks/test"
 		},
@@ -418,7 +418,7 @@
 		{
 			"importpath": "github.com/BlackBeetleHub/go",
 			"repository": "https://github.com/BlackBeetleHub/go",
-			"revision": "2661e94d7b4f21f8ebfbadd47d57340ef2706912",
+			"revision": "25aa6fa1ce04fd34b2d7dbafa6b8bd25c4f171d3",
 			"branch": "master"
 		},
 		{

@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/jmoiron/sqlx"
 	hlog "github.com/stellar/horizon/log"
 	tdb "github.com/stellar/horizon/test/db"
