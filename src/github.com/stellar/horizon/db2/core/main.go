@@ -28,6 +28,11 @@ type AccountData struct {
 	Value     string `db:"datavalue"`
 }
 
+type Alias struct {
+	Accountid string `db:"accountid"`
+	Sourceid string `db:"accountsourceid"`
+}
+
 // LedgerHeader is row of data from the `ledgerheaders` table
 type LedgerHeader struct {
 	LedgerHash     string           `db:"ledgerhash"`
