@@ -47,6 +47,7 @@ func (q *OperationsQ) ForAccount(aid string) *OperationsQ {
 	var account Account
 	q.Err = q.parent.AccountByAddress(&account, aid)
 	if q.Err != nil {
+		println("ForAccount error 1");
 		return q
 	}
 
@@ -114,6 +115,7 @@ func (q *OperationsQ) OnlyPayments() *OperationsQ {
 // Page specifies the paging constraints for the query being built by `q`.
 func (q *OperationsQ) Page(page db2.PageQuery) *OperationsQ {
 	if q.Err != nil {
+		println("Error Page")
 		return q
 	}
 
@@ -128,6 +130,7 @@ func (q *OperationsQ) Select(dest interface{}) error {
 	}
 
 	q.Err = q.parent.Select(dest, q.sql)
+
 	return q.Err
 }
 

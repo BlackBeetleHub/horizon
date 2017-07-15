@@ -24,6 +24,8 @@ func ForOperation(
 	switch op.Body.Type {
 	case xdr.OperationTypeCreateAccount:
 		result = append(result, op.Body.MustCreateAccountOp().Destination)
+	case xdr.OperationTypeCreateAlias:
+		result = append(result, op.Body.MustCreateAliasOp().SourceId)
 	case xdr.OperationTypePayment:
 		result = append(result, op.Body.MustPaymentOp().Destination)
 	case xdr.OperationTypePathPayment:

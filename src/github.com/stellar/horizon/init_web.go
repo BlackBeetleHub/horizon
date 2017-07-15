@@ -90,7 +90,7 @@ func initWebActions(app *App) {
 	r.Get("/accounts/:account_id/offers", &OffersByAccountAction{})
 	r.Get("/accounts/:account_id/trades", &TradeIndexAction{})
 	r.Get("/accounts/:account_id/data/:key", &DataShowAction{})
-
+	r.Get("/accounts/:account_id/aliases", &AliasShowAction{})
 	// transaction history actions
 	r.Get("/transactions", &TransactionIndexAction{})
 	r.Get("/transactions/:id", &TransactionShowAction{})

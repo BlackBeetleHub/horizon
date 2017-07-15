@@ -16,6 +16,7 @@ import (
 	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/ingest/participants"
+	//"github.com/stellar/horizon/txsub/results/db"
 )
 
 // Run starts an attempt to ingest the range of ledgers specified in this
@@ -133,6 +134,16 @@ func (is *Session) ingestEffects() {
 		is.assetDetails(dets, op.Asset, "")
 		effects.Add(op.Destination, history.EffectAccountCredited, dets)
 		effects.Add(source, history.EffectAccountDebited, dets)
+	case xdr.OperationTypeCreateAlias:
+		op := opbody.MustCreateAliasOp()
+		dets := map[string]interface{}{
+			"alias": op.AccountId.Address(),
+			"owner": op.SourceId.Address(),
+		}
+		//is.assetDetails(dets, op., "")
+		//result := is.Cursor.OperationResult()//.MustCreateAliasResult()
+		effects.Add(op.SourceId, history.EffectAliasCreated, dets)
+		//is.ingestTrades(effects, source, result.MustCreateAliasResult().)
 	case xdr.OperationTypePathPayment:
 		op := opbody.MustPathPaymentOp()
 		dets := map[string]interface{}{"amount": amount.String(op.DestAmount)}
@@ -539,6 +550,10 @@ func (is *Session) operationDetails() map[string]interface{} {
 		details["funder"] = source.Address()
 		details["account"] = op.Destination.Address()
 		details["starting_balance"] = amount.String(op.StartingBalance)
+	case xdr.OperationTypeCreateAlias:
+		op := c.Operation().Body.MustCreateAliasOp()
+		details["alias"] = op.AccountId.Address()
+		details["owner"] = op.SourceId.Address()
 	case xdr.OperationTypePayment:
 		op := c.Operation().Body.MustPaymentOp()
 		details["from"] = source.Address()

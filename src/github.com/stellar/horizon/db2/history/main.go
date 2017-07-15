@@ -96,6 +96,14 @@ const (
 	// EffectDataUpdated occurs when an account changes a data field's value
 	EffectDataUpdated EffectType = 42 // from manage_data
 
+	//alias effects
+
+	//EffectAliasCreated occurs when an account gets a new alias
+	EffectAliasCreated EffectType = 43
+
+	//EffectAliasRemoved occurs when an account removes a alias
+	EffectAliasRemoved EffectType = 44
+
 )
 
 // Account is a row of data from the `history_accounts` table

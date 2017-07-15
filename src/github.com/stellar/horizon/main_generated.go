@@ -20,6 +20,13 @@ func (action DataShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.
 }
 
 // ServeHTTPC is a method for web.Handler
+func (action AliasShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
+	ap := &action.Action
+	ap.Prepare(c, w, r)
+	ap.Execute(&action)
+}
+
+// ServeHTTPC is a method for web.Handler
 func (action EffectIndexAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
 	ap := &action.Action
 	ap.Prepare(c, w, r)

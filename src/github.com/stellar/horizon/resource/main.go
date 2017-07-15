@@ -185,6 +185,14 @@ type Signer struct {
 	Type      string `json:"type"`
 }
 
+type Alias struct {
+	AliasID 	string `json:"id"`
+}
+
+type Aliases struct {
+	Aliases  []Alias `json:aliases`
+}
+
 // Trade represents a trade effect
 type Trade struct {
 	Links struct {
