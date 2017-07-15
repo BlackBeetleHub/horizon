@@ -137,8 +137,8 @@ func (is *Session) ingestEffects() {
 	case xdr.OperationTypeCreateAlias:
 		op := opbody.MustCreateAliasOp()
 		dets := map[string]interface{}{
-			"alias": op.AccountId.Address(),
-			"owner": op.SourceId.Address(),
+			"alias_id": op.AccountId.Address(),
+			"owner_id": op.SourceId.Address(),
 		}
 		//is.assetDetails(dets, op., "")
 		//result := is.Cursor.OperationResult()//.MustCreateAliasResult()
@@ -552,8 +552,8 @@ func (is *Session) operationDetails() map[string]interface{} {
 		details["starting_balance"] = amount.String(op.StartingBalance)
 	case xdr.OperationTypeCreateAlias:
 		op := c.Operation().Body.MustCreateAliasOp()
-		details["alias"] = op.AccountId.Address()
-		details["owner"] = op.SourceId.Address()
+		details["alias_id"] = op.AccountId.Address()
+		details["owner_id"] = op.SourceId.Address()
 	case xdr.OperationTypePayment:
 		op := c.Operation().Body.MustPaymentOp()
 		details["from"] = source.Address()

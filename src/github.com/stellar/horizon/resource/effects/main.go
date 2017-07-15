@@ -30,6 +30,8 @@ var TypeNames = map[history.EffectType]string{
 	history.EffectDataCreated:              "data_created",
 	history.EffectDataRemoved:              "data_removed",
 	history.EffectDataUpdated:              "data_updated",
+	history.EffectAliasCreated:				"alias_created",
+	history.EffectAliasRemoved:				"alias_removed",
 }
 
 // New creates a new effect resource from the provided database representation
@@ -45,6 +47,14 @@ func New(
 	switch row.Type {
 	case history.EffectAccountCreated:
 		e := AccountCreated{Base: basev}
+		err = row.UnmarshalDetails(&e)
+		result = e
+	case history.EffectAliasCreated:
+		e := AliasCreated{Base: basev}
+		err = row.UnmarshalDetails(&e)
+		result = e
+	case history.EffectAliasRemoved:
+		e := AliasRemoved{Base: basev}
 		err = row.UnmarshalDetails(&e)
 		result = e
 	case history.EffectAccountCredited:
@@ -133,6 +143,18 @@ type Base struct {
 	Account string `json:"account"`
 	Type    string `json:"type"`
 	TypeI   int32  `json:"type_i"`
+}
+
+type AliasCreated struct {
+	Base
+	AliasID			string `json:"alias_id"`
+	OwnerID			string `json:"owner_id"`
+}
+
+type AliasRemoved struct {
+	Base
+	AliasID			string `json: "alias_id"`
+	OwnerID			string `json: "owner_id"`
 }
 
 type AccountCreated struct {
