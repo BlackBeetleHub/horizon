@@ -12,7 +12,7 @@ import (
 // in horizon's JSON responses
 var TypeNames = map[xdr.OperationType]string{
 	xdr.OperationTypeCreateAccount:      "create_account",
-	xdr.OperationTypeCreateAlias:		 "create_alias",
+	xdr.OperationTypeManageAlias:		 "manage_alias",
 	xdr.OperationTypePayment:            "payment",
 	xdr.OperationTypePathPayment:        "path_payment",
 	xdr.OperationTypeManageOffer:        "manage_offer",
@@ -40,8 +40,8 @@ func New(
 		e := CreateAccount{Base: base}
 		err = row.UnmarshalDetails(&e)
 		result = e
-	case xdr.OperationTypeCreateAlias:
-		e := CreateAlias{Base: base}
+	case xdr.OperationTypeManageAlias:
+		e := ManageAlias{Base: base}
 		err = row.UnmarshalDetails(&e)
 		result = e
 	case xdr.OperationTypePayment:
@@ -121,7 +121,7 @@ type CreateAccount struct {
 
 // CreateAlias is the json resource representing a single operation whose type
 // is CreateAlias.
-type CreateAlias struct {
+type ManageAlias struct {
 	Base
 	AliasID 		 string `json:"alias_id"`
 	OwnerID          string `json:"owner_id"`

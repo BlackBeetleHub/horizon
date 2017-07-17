@@ -134,15 +134,15 @@ func (is *Session) ingestEffects() {
 		is.assetDetails(dets, op.Asset, "")
 		effects.Add(op.Destination, history.EffectAccountCredited, dets)
 		effects.Add(source, history.EffectAccountDebited, dets)
-	case xdr.OperationTypeCreateAlias:
-		op := opbody.MustCreateAliasOp()
+	case xdr.OperationTypeManageAlias:
+		op := opbody.MustManageAliasOp()
 		dets := map[string]interface{}{
-			"alias_id": op.AccountId.Address(),
-			"owner_id": op.SourceId.Address(),
+			"alias_id": op.AliasId.Address(),
+			"owner_id": source.Address(),
 		}
 		//is.assetDetails(dets, op., "")
 		//result := is.Cursor.OperationResult()//.MustCreateAliasResult()
-		effects.Add(op.SourceId, history.EffectAliasCreated, dets)
+		effects.Add(source, history.EffectAliasCreated, dets)
 		//is.ingestTrades(effects, source, result.MustCreateAliasResult().)
 	case xdr.OperationTypePathPayment:
 		op := opbody.MustPathPaymentOp()
@@ -550,10 +550,10 @@ func (is *Session) operationDetails() map[string]interface{} {
 		details["funder"] = source.Address()
 		details["account"] = op.Destination.Address()
 		details["starting_balance"] = amount.String(op.StartingBalance)
-	case xdr.OperationTypeCreateAlias:
-		op := c.Operation().Body.MustCreateAliasOp()
-		details["alias_id"] = op.AccountId.Address()
-		details["owner_id"] = op.SourceId.Address()
+	case xdr.OperationTypeManageAlias:
+		op := c.Operation().Body.MustManageAliasOp()
+		details["alias_id"] = op.AliasId.Address()
+		details["owner_id"] = source.Address()
 	case xdr.OperationTypePayment:
 		op := c.Operation().Body.MustPaymentOp()
 		details["from"] = source.Address()

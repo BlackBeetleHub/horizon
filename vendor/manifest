@@ -418,7 +418,7 @@
 		{
 			"importpath": "github.com/BlackBeetleHub/go",
 			"repository": "https://github.com/BlackBeetleHub/go",
-			"revision": "25aa6fa1ce04fd34b2d7dbafa6b8bd25c4f171d3",
+			"revision": "ff7ec3907f5563377cebfb9f04ecf022e771dc95",
 			"branch": "master"
 		},
 		{

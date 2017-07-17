@@ -162,7 +162,7 @@ func init() {
 		"the maximum number of ledgers the history db is allowed to be out of date from the connected stellar-core db before horizon considers history stale",
 	)
 
-	//rootCmd.AddCommand(dbCmd)
+	rootCmd.AddCommand(dbCmd)
 
 	viper.BindPFlags(rootCmd.Flags())
 }

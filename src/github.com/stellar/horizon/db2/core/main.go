@@ -29,8 +29,8 @@ type AccountData struct {
 }
 
 type Alias struct {
-	AliasID 	string `db:"accountid"`
-	OwnerID 	string `db:"accountsourceid"`
+	AliasID 	string `db:"aliasid"`
+	OwnerID 	string `db:"accountid"`
 }
 
 // LedgerHeader is row of data from the `ledgerheaders` table
