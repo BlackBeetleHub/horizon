@@ -17,6 +17,7 @@ import (
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/ingest/participants"
 	//"github.com/stellar/horizon/txsub/results/db"
+	"strconv"
 )
 
 // Run starts an attempt to ingest the range of ledgers specified in this
@@ -139,10 +140,25 @@ func (is *Session) ingestEffects() {
 		dets := map[string]interface{}{
 			"alias_id": op.AliasId.Address(),
 			"owner_id": source.Address(),
+			"is_delete": strconv.FormatBool(op.IsDelete),
 		}
-		//is.assetDetails(dets, op., "")
+		effect := history.EffectType(0)
+
+		if op.IsDelete {
+			effect = history.EffectAliasRemoved
+		}else{
+			effect = history.EffectAliasCreated
+		}
+		//result := is.Cursor.OperationResult().MustManageAliasResult()
+		println(is.Cursor.OperationResult().ManageAliasResult.Code )
+		if is.Cursor.OperationResult().ManageAliasResult.Code == xdr.ManageAliasResultCodeManageAliasSuccess {
+			effects.Add(source, effect, dets)
+		}
+
+		//is.ingestTrades(effects, source, result.MustSuccess(), )
+
 		//result := is.Cursor.OperationResult()//.MustCreateAliasResult()
-		effects.Add(source, history.EffectAliasCreated, dets)
+		//effects.Add(source, history.EffectAliasCreated, dets)		111!!!:))))
 		//is.ingestTrades(effects, source, result.MustCreateAliasResult().)
 	case xdr.OperationTypePathPayment:
 		op := opbody.MustPathPaymentOp()
@@ -444,7 +460,11 @@ func (is *Session) ingestTrades(effects *EffectIngestion, buyer xdr.AccountId, c
 		effects.Add(seller, history.EffectTrade, sd)
 	}
 }
+/*
+func (is *Session) ingestTrades(effects *EffectIngestion, aliasID xdr.AccountId){
 
+}
+*/
 func (is *Session) tradeDetails(buyer, seller xdr.AccountId, claim xdr.ClaimOfferAtom) (bd map[string]interface{}, sd map[string]interface{}) {
 	bd = map[string]interface{}{
 		"offer_id":      claim.OfferId,
@@ -554,6 +574,7 @@ func (is *Session) operationDetails() map[string]interface{} {
 		op := c.Operation().Body.MustManageAliasOp()
 		details["alias_id"] = op.AliasId.Address()
 		details["owner_id"] = source.Address()
+		details["is_delete"] = strconv.FormatBool(op.IsDelete)
 	case xdr.OperationTypePayment:
 		op := c.Operation().Body.MustPaymentOp()
 		details["from"] = source.Address()

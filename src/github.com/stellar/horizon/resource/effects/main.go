@@ -149,12 +149,12 @@ type AliasCreated struct {
 	Base
 	AliasID			string `json:"alias_id"`
 	OwnerID			string `json:"owner_id"`
+	IsDelete		string `json:"is_delete"`
 }
 
 type AliasRemoved struct {
 	Base
-	AliasID			string `json: "alias_id"`
-	OwnerID			string `json: "owner_id"`
+	IsDelete		string `json:"is_delete"`
 }
 
 type AccountCreated struct {

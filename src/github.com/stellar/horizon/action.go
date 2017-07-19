@@ -66,14 +66,12 @@ func (action *Action) GetPagingParams() (cursor string, order string, limit uint
 // using the results from a call to GetPagingParams()
 func (action *Action) GetPageQuery() db2.PageQuery {
 	if action.Err != nil {
-		println("GetPageQuery error 1")
 		return db2.PageQuery{}
 	}
 
 	r, err := db2.NewPageQuery(action.GetPagingParams())
 
 	if err != nil {
-		println("GetPageQuery error 2")
 		action.Err = err
 	}
 
@@ -123,13 +121,11 @@ func (action *Action) ValidateCursorAsDefault() {
 // guaranteed to return no results, we return a 410 GONE http response.
 func (action *Action) ValidateCursorWithinHistory() {
 	if action.Err != nil {
-		println("ValidateCursorWithinHistory error 1")
 		return
 	}
 
 	pq := action.GetPageQuery()
 	if action.Err != nil {
-		println("ValidateCursorWithinHistory error 2")
 		return
 	}
 
@@ -139,7 +135,6 @@ func (action *Action) ValidateCursorWithinHistory() {
 	// rather return an empty page (allowing code that tracks the procession of
 	// some resource more easily).
 	if pq.Order != "desc" {
-		//println("ValidateCursorWithinHistory error 3")
 		return
 	}
 
@@ -155,7 +150,6 @@ func (action *Action) ValidateCursorWithinHistory() {
 	}
 
 	if err != nil {
-		println("ValidateCursorWithinHistory error 4")
 		action.Err = err
 		return
 	}
@@ -163,7 +157,6 @@ func (action *Action) ValidateCursorWithinHistory() {
 	elder := toid.New(ledger.CurrentState().HistoryElder, 0, 0)
 
 	if cursor <= elder.ToInt64() {
-		println("ValidateCursorWithinHistory error 5")
 		action.Err = &problem.BeforeHistory
 	}
 }
