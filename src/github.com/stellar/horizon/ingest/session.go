@@ -16,7 +16,6 @@ import (
 	"github.com/BlackBeetleHub/go/xdr"
 	"github.com/stellar/horizon/db2/history"
 	"github.com/stellar/horizon/ingest/participants"
-	//"github.com/stellar/horizon/txsub/results/db"
 	"strconv"
 )
 
@@ -143,23 +142,15 @@ func (is *Session) ingestEffects() {
 			"is_delete": strconv.FormatBool(op.IsDelete),
 		}
 		effect := history.EffectType(0)
-
 		if op.IsDelete {
 			effect = history.EffectAliasRemoved
 		}else{
 			effect = history.EffectAliasCreated
 		}
-		//result := is.Cursor.OperationResult().MustManageAliasResult()
 		println(is.Cursor.OperationResult().ManageAliasResult.Code )
 		if is.Cursor.OperationResult().ManageAliasResult.Code == xdr.ManageAliasResultCodeManageAliasSuccess {
 			effects.Add(source, effect, dets)
 		}
-
-		//is.ingestTrades(effects, source, result.MustSuccess(), )
-
-		//result := is.Cursor.OperationResult()//.MustCreateAliasResult()
-		//effects.Add(source, history.EffectAliasCreated, dets)		111!!!:))))
-		//is.ingestTrades(effects, source, result.MustCreateAliasResult().)
 	case xdr.OperationTypePathPayment:
 		op := opbody.MustPathPaymentOp()
 		dets := map[string]interface{}{"amount": amount.String(op.DestAmount)}
