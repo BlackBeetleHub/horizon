@@ -154,6 +154,11 @@ type PriceLevel struct {
 	Amount string `json:"amount"`
 }
 
+type Assets struct{
+	BuyingAssets   []Asset `json:"buying_assets"`
+	SellingAssets  []Asset `json:"selling_assets"`
+}
+
 // Root is the initial map of links into the api.
 type Root struct {
 	Links struct {

@@ -82,6 +82,14 @@ func (action OperationShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *
 	ap.Execute(&action)
 }
 
+
+// ServeHTTPC is a method for web.Handler
+func (action AssetsShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
+	ap := &action.Action
+	ap.Prepare(c, w, r)
+	ap.Execute(&action)
+}
+
 // ServeHTTPC is a method for web.Handler
 func (action OrderBookShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
 	ap := &action.Action

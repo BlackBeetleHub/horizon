@@ -38,6 +38,8 @@ type LedgerHeader struct {
 	Data           xdr.LedgerHeader `db:"data"`
 }
 
+
+
 // Offer is row of data from the `offers` table from stellar-core
 type Offer struct {
 	SellerID string `db:"sellerid"`
@@ -124,6 +126,12 @@ type Trustline struct {
 	Tlimit    xdr.Int64
 	Balance   xdr.Int64
 	Flags     int32
+}
+
+type Asset struct {
+	AssetType xdr.AssetType `db:"assettype"`
+	AssetCode null.String   `db:"assetcode"`
+	Issuer    null.String   `db:"issuer"`
 }
 
 // AssetFromDB produces an xdr.Asset by combining the constituent type, code and
