@@ -5,6 +5,7 @@
     <option name="urls">
       <list>
         <option value="file://$PROJECT_DIR$" />
+        <option value="file://$PROJECT_DIR$/vendor" />
       </list>
     </option>
     <option name="useGoPathFromSystemEnvironment" value="false" />
