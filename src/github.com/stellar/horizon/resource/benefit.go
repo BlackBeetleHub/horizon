@@ -3,18 +3,9 @@ package resource
 import (
 	"github.com/stellar/horizon/paths"
 	"context"
-	"github.com/stellar/go/amount"
 )
 
-func (this *Path) PopulateBenefit(ctx context.Context, q paths.Exchange, p paths.Path) (err error) {
-
-	this.DestinationAmount = amount.String(q.DestinationAmount)
-	cost, err := p.Cost(q.DestinationAmount)
-	if err != nil {
-		return
-	}
-
-	this.SourceAmount = amount.String(cost)
+func (this *BasePath) PopulateBenefit(ctx context.Context, q paths.Exchange, p paths.Path) (err error) {
 
 	err = p.Source().Extract(
 		&this.SourceAssetType,
@@ -49,4 +40,8 @@ func (this *Path) PopulateBenefit(ctx context.Context, q paths.Exchange, p paths
 	}
 
 	return
+}
+
+func (this BasePath) PagingToken() string {
+	return ""
 }

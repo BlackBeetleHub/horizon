@@ -2,6 +2,7 @@ package paths
 
 import (
 	"github.com/stellar/go/xdr"
+	"github.com/stellar/horizon/db2/core"
 )
 
 // Query is a query for paths
@@ -14,8 +15,12 @@ type Query struct {
 
 type Exchange struct {
 	DestinationAsset   xdr.Asset
-	DestinationAmount  xdr.Int64
 	SourceAsset		   xdr.Asset
+}
+
+type CoreExchange struct {
+	Dest    core.Asset
+	Source  core.Asset
 }
 // Path is the interface that represents a single result returned
 // by a path finder.
@@ -28,6 +33,9 @@ type Path interface {
 	Cost(amount xdr.Int64) (xdr.Int64, error)
 }
 
+type Paths struct {
+	Paths []Path
+}
 // Finder finds paths.
 type Finder interface {
 	Find(Query) ([]Path, error)

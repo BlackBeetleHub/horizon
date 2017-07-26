@@ -157,9 +157,5 @@ func (s *search) extendSearch(cur *pathNode) {
 }
 
 func (s *search) hasEnoughDepth(path *pathNode) (bool, error) {
-	_, err := path.Cost(s.Exchange.DestinationAmount)
-	if err == ErrNotEnough {
-		return false, nil
-	}
-	return true, err
+	return true, nil
 }
