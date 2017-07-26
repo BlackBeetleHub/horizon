@@ -119,6 +119,7 @@ func initWebActions(app *App) {
 	r.Get("/friendbot", &FriendbotAction{})
 
 	r.Get("/assets", &AssetsShowAction{})
+	r.Get("/benefits", &BenefitsShowAction{})
 
 	r.NotFound(&NotFoundAction{})
 }

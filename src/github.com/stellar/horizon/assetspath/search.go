@@ -1,4 +1,5 @@
-package simplepath
+package assetspath
+
 
 import (
 	"github.com/stellar/go/xdr"
@@ -16,8 +17,8 @@ import (
 // 3.  Call Run() to perform the search.
 //
 type search struct {
-	Query  paths.Query
-	Finder *Finder
+	Exchange  		paths.Exchange
+	BenefitsChecker *BenefitsChecker
 
 	// Fields below are initialized by a call to Init() after
 	// setting the fields above
@@ -35,20 +36,17 @@ type search struct {
 func (s *search) Init() {
 	s.queue = []*pathNode{
 		&pathNode{
-			Asset: s.Query.DestinationAsset,
+			Asset: s.Exchange.DestinationAsset,
 			Tail:  nil,
-			Q:     s.Finder.Q,
+			Q:     s.BenefitsChecker.Q,
 		},
 	}
-	println("check simplepath work")
+
 	// build a map of asset's string representation to check if a given node
 	// is one of the targets for our search.  Unfortunately, xdr.Asset is not suitable
 	// for use as a map key, and so we use its string representation.
 	s.targets = map[string]bool{}
-	for _, a := range s.Query.SourceAssets {
-		s.targets[a.String()] = true
-	}
-
+	s.targets[s.Exchange.SourceAsset.String()] = true
 	s.visited = map[string]bool{}
 	s.Err = nil
 	s.Results = nil
@@ -132,7 +130,7 @@ func (s *search) runOnce() {
 func (s *search) extendSearch(cur *pathNode) {
 	// find connected assets
 	var connected []xdr.Asset
-	s.Err = s.Finder.Q.ConnectedAssets(&connected, cur.Asset)
+	s.Err = s.BenefitsChecker.Q.ConnectedAssets(&connected, cur.Asset)
 	if s.Err != nil {
 		return
 	}
@@ -141,7 +139,7 @@ func (s *search) extendSearch(cur *pathNode) {
 		newPath := &pathNode{
 			Asset: a,
 			Tail:  cur,
-			Q:     s.Finder.Q,
+			Q:     s.BenefitsChecker.Q,
 		}
 
 		var hasEnough bool
@@ -159,7 +157,7 @@ func (s *search) extendSearch(cur *pathNode) {
 }
 
 func (s *search) hasEnoughDepth(path *pathNode) (bool, error) {
-	_, err := path.Cost(s.Query.DestinationAmount)
+	_, err := path.Cost(s.Exchange.DestinationAmount)
 	if err == ErrNotEnough {
 		return false, nil
 	}

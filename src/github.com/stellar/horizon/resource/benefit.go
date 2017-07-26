@@ -1,12 +1,12 @@
 package resource
 
 import (
-	"github.com/stellar/go/amount"
 	"github.com/stellar/horizon/paths"
-	"golang.org/x/net/context"
+	"context"
+	"github.com/stellar/go/amount"
 )
 
-func (this *Path) Populate(ctx context.Context, q paths.Query, p paths.Path) (err error) {
+func (this *Path) PopulateBenefit(ctx context.Context, q paths.Exchange, p paths.Path) (err error) {
 
 	this.DestinationAmount = amount.String(q.DestinationAmount)
 	cost, err := p.Cost(q.DestinationAmount)
@@ -50,11 +50,3 @@ func (this *Path) Populate(ctx context.Context, q paths.Query, p paths.Path) (er
 
 	return
 }
-
-// stub implementation to satisfy pageable interface
-func (this Path) PagingToken() string {
-	return ""
-}
-
-
-

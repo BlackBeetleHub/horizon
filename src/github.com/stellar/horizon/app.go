@@ -46,6 +46,7 @@ type App struct {
 	protocolVersion   int32
 	submitter         *txsub.System
 	paths             paths.Finder
+	benefits          paths.BenefitsChecker
 	friendbot         *friendbot.Bot
 	ingester          *ingest.System
 	reaper            *reap.System

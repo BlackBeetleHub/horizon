@@ -90,6 +90,12 @@ func (action AssetsShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *htt
 	ap.Execute(&action)
 }
 
+func (action BenefitsShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
+	ap := &action.Action
+	ap.Prepare(c, w, r)
+	ap.Execute(&action)
+}
+
 // ServeHTTPC is a method for web.Handler
 func (action OrderBookShowAction) ServeHTTPC(c web.C, w http.ResponseWriter, r *http.Request) {
 	ap := &action.Action

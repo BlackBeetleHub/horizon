@@ -78,6 +78,14 @@ func (q *Q) ConnectedAssets(dest interface{}, selling xdr.Asset) error {
 	return nil
 }
 
+func (q *Q) GetMinAmountsForAsset(dest interface{}) error{
+	sql := sq.Select("SUM(amount) AS amounts, buyassetcode").
+		From("offers").
+		GroupBy("buyassetcode").
+		OrderBy("amounts")
+	return q.Select(dest, sql)
+}
+
 // OffersByAddress loads a page of active offers for the given
 // address.
 func (q *Q) OffersByAddress(dest interface{}, addy string, pq db2.PageQuery) error {

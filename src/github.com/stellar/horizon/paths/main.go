@@ -12,6 +12,11 @@ type Query struct {
 	SourceAssets       []xdr.Asset
 }
 
+type Exchange struct {
+	DestinationAsset   xdr.Asset
+	DestinationAmount  xdr.Int64
+	SourceAsset		   xdr.Asset
+}
 // Path is the interface that represents a single result returned
 // by a path finder.
 type Path interface {
@@ -26,4 +31,8 @@ type Path interface {
 // Finder finds paths.
 type Finder interface {
 	Find(Query) ([]Path, error)
+}
+
+type BenefitsChecker interface {
+	Find(exchange Exchange) ([]Path, error)
 }
