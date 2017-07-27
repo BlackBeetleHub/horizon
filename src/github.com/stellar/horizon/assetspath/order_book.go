@@ -22,9 +22,50 @@ type orderBook struct {
 	Q       *core.Q
 }
 
-func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {
+
+
+func (ob *orderBook) MaxAvailebleCost(source xdr.Asset) (result xdr.Int64, err error) {
 	// load offers from the two assets
 
+	sql, sqlBuildError := ob.GetSelectBuilderForCost(source)
+	inverted := assets.Equals(source, ob.Buying)
+	if sqlBuildError != nil {
+		return
+	}
+
+	if !inverted {
+		sql = sql.OrderBy("price ASC")
+	} else {
+		sql = sql.OrderBy("price DESC")
+	}
+
+	rows, err := ob.Q.Query(sql)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	var resMax int64
+
+	for rows.Next() {
+		// load data from the row
+		var available, pricen, priced, offerid int64
+		if inverted {
+			err = rows.Scan(&available, &priced, &pricen, &offerid)
+			available = mul(available, pricen, priced)
+		} else {
+			err = rows.Scan(&available, &pricen, &priced, &offerid)
+		}
+		if err != nil {
+			break
+		}
+		resMax += available
+	}
+
+	return xdr.Int64(resMax), nil
+}
+
+func (ob *orderBook)GetSelectBuilderForCost(source xdr.Asset) (sq.SelectBuilder, error) {
 	var (
 		// selling/buying types
 		st, bt xdr.AssetType
@@ -34,15 +75,10 @@ func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.
 		si, bi string
 	)
 
-	err = ob.Selling.Extract(&st, &sc, &si)
-	if err != nil {
-		return
-	}
+	err := ob.Selling.Extract(&st, &sc, &si)
 
 	err = ob.Buying.Extract(&bt, &bc, &bi)
-	if err != nil {
-		return
-	}
+
 
 	sql := sq.
 	Select("amount", "pricen", "priced", "offerid").
@@ -64,6 +100,18 @@ func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.
 		sql = sql.OrderBy("price DESC")
 	}
 
+	return sql, err
+}
+
+func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {
+	// load offers from the two assets
+
+	sql, sqlBuildError := ob.GetSelectBuilderForCost(source)
+	inverted := assets.Equals(source, ob.Buying)
+	if sqlBuildError != nil {
+		return
+	}
+
 	rows, err := ob.Q.Query(sql)
 	if err != nil {
 		return
@@ -75,6 +123,10 @@ func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.
 		cost   int64
 	)
 
+	check, _ := ob.MaxAvailebleCost(source)
+	if check > sourceAmount {
+		println("True check > sourceAmount")
+	}
 	for rows.Next() {
 		// load data from the row
 		var available, pricen, priced, offerid int64

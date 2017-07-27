@@ -88,6 +88,26 @@ func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 	return
 }
 
+
+func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
+	//result =
+	if p.Tail == nil {
+		return
+	}
+
+	cur := p
+
+	for cur.Tail != nil {
+		ob := cur.OrderBook()
+		result, err = ob.Cost(cur.Tail.Asset, result)
+		if err != nil {
+			return
+		}
+		cur = cur.Tail
+	}
+
+	return
+}
 // Depth returns the length of the list
 func (p *pathNode) Depth() int {
 	depth := 0

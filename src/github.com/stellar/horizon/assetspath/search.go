@@ -142,16 +142,6 @@ func (s *search) extendSearch(cur *pathNode) {
 			Q:     s.BenefitsChecker.Q,
 		}
 
-		var hasEnough bool
-		hasEnough, s.Err = s.hasEnoughDepth(newPath)
-		if s.Err != nil {
-			return
-		}
-
-		if !hasEnough {
-			continue
-		}
-
 		s.queue = append(s.queue, newPath)
 	}
 }

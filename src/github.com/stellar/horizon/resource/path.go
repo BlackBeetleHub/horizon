@@ -10,6 +10,7 @@ func (this *Path) Populate(ctx context.Context, q paths.Query, p paths.Path) (er
 
 	this.DestinationAmount = amount.String(q.DestinationAmount)
 	cost, err := p.Cost(q.DestinationAmount)
+	println(cost);
 	if err != nil {
 		return
 	}

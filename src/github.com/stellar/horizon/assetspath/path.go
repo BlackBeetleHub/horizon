@@ -14,6 +14,7 @@ import (
 // as a linked list pointing from source to destination.
 type pathNode struct {
 	Asset xdr.Asset
+	CostAmount int64
 	Tail  *pathNode
 	Q     *core.Q
 }
@@ -114,7 +115,22 @@ func (p *pathNode) Flatten() (result []xdr.Asset) {
 		cur = cur.Tail
 	}
 }
+/*
+func (p *pathNode) CalculateMaxDistAmount() {
+	var result int64
+	var err error
+	cur := p
 
+	for cur.Tail != nil {
+		ob := cur.OrderBook()
+		result, err = ob.Cost(cur.Tail.Asset, result)
+		if err != nil {
+			return
+		}
+		cur = cur.Tail
+	}
+}
+*/
 func (p *pathNode) OrderBook() *orderBook {
 	if p.Tail == nil {
 		return nil

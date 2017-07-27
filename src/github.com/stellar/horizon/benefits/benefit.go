@@ -54,8 +54,32 @@ func (benefit *Benefit) CheckValidExchanges(q *core.Q) {
 		if len(resSell) == 0 {
 			continue;
 		}
-		validateResultWay = append(validateResultWay, benefit.PossibleExchanges[i])
+		validateResultWay = append(validateResultWay, short)
 	}
 	benefit.PossibleExchanges = validateResultWay
 	println("After validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
+}
+
+func GetAmountForOperation() int64 {
+	return  1
+}
+
+func GenerateBackPaths() {
+
+}
+
+func GenerateForwardPaths() {
+
+}
+
+func MaxCostForwardPath() {
+
+}
+
+func MaxCostBackPath(){
+
+}
+
+func (benefit *Benefit) SearchBenefitInPath() {
+
 }
