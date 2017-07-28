@@ -17,7 +17,7 @@ type pathNode struct {
 	Q     *core.Q
 }
 
-// check interface compatibility
+
 var _ paths.Path = &pathNode{}
 
 func (p *pathNode) String() string {
@@ -36,6 +36,21 @@ func (p *pathNode) String() string {
 	}
 
 	return out.String()
+}
+
+func (pList *pathNode) ReversePath() *pathNode {
+	pCurr := pList
+	var pTop *pathNode = nil
+	for {
+		if pCurr == nil {
+			break
+		}
+		pTemp := pCurr.Tail
+		pCurr.Tail = pTop
+		pTop = pCurr
+		pCurr = pTemp
+	}
+	return pTop
 }
 
 // Destination implements paths.Path.Destination interface method
@@ -77,6 +92,7 @@ func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 	cur := p
 
 	for cur.Tail != nil {
+
 		ob := cur.OrderBook()
 		result, err = ob.Cost(cur.Tail.Asset, result)
 		if err != nil {
@@ -90,23 +106,51 @@ func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 
 
 func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
-	//result =
 	if p.Tail == nil {
 		return
 	}
-
 	cur := p
-
+	println(cur.Asset.String())
+	println(cur.Tail.Asset.String())
+	result, _ = cur.OrderBook().MaxAvailebleCost(cur.Tail.Asset)
+	cur = cur.Tail
+	println(result)
 	for cur.Tail != nil {
+		println("------Iter begin--------")
+		println(cur.Asset.String())
+		println(cur.Tail.Asset.String())
 		ob := cur.OrderBook()
-		result, err = ob.Cost(cur.Tail.Asset, result)
+		result, err = ob.MaxReciveCount(cur.Tail.Asset, result)
+		if err != nil {
+			return
+		}
+		println(result)
+		println("------Iter end----------")
+		cur = cur.Tail
+	}
+	return
+}
+
+func (p *pathNode) MaxDestRecive() (result xdr.Int64, err error) {
+	if p.Tail == nil {
+		return
+	}
+	cur := p
+	result, _ = cur.ReverseOrderBook().MaxAvailebleCost(cur.Tail.Asset)
+	for cur.Tail != nil {
+		ob := cur.ReverseOrderBook()
+		result, err = ob.MaxAvaiebleAmount(cur.Tail.Asset, result)
 		if err != nil {
 			return
 		}
 		cur = cur.Tail
 	}
-
 	return
+}
+
+func (p *pathNode) MaxCostBack() (result xdr.Int64, err error) {
+	res ,_ := p.MaxDestRecive()
+	return res, nil
 }
 // Depth returns the length of the list
 func (p *pathNode) Depth() int {
@@ -138,10 +182,21 @@ func (p *pathNode) OrderBook() *orderBook {
 	if p.Tail == nil {
 		return nil
 	}
-
 	return &orderBook{
 		Selling: p.Tail.Asset,
 		Buying:  p.Asset,
+		Q:       p.Q,
+	}
+}
+
+func (p *pathNode) ReverseOrderBook() *orderBook {
+	if p.Tail == nil {
+		return nil
+	}
+
+	return &orderBook{
+		Selling: p.Asset,
+		Buying:  p.Tail.Asset,
 		Q:       p.Q,
 	}
 }

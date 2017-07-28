@@ -6,11 +6,24 @@ import (
 	"golang.org/x/net/context"
 )
 
+
 func (this *Path) Populate(ctx context.Context, q paths.Query, p paths.Path) (err error) {
 
 	this.DestinationAmount = amount.String(q.DestinationAmount)
 	cost, err := p.Cost(q.DestinationAmount)
-	println(cost);
+	aCost, _ := p.MaxCost()
+	println("-----------------------------")
+	print("Amount source need send :")
+	print(cost)
+	print(" with dist ")
+	println(q.DestinationAmount)
+	print("Max amount that dist can recive: ")
+	println(aCost)
+
+	print("Max amount that can you send: ")
+	maxSend, _ := p.Cost(aCost)
+	println(maxSend)
+	println("---------------")
 	if err != nil {
 		return
 	}

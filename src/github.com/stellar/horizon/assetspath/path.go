@@ -14,13 +14,41 @@ import (
 // as a linked list pointing from source to destination.
 type pathNode struct {
 	Asset xdr.Asset
-	CostAmount int64
 	Tail  *pathNode
 	Q     *core.Q
 }
 
 // check interface compatibility
 var _ paths.Path = &pathNode{}
+
+func (p* pathNode)MaxCostBack() (result xdr.Int64, err error) {
+	return
+}
+
+func (p *pathNode)ReversePath() {
+	return
+}
+
+func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
+	//result =
+
+	if p.Tail == nil {
+		return
+	}
+
+	cur := p
+	result, _ = cur.OrderBook().MaxAvailebleCost(cur.Tail.Asset)
+	for cur.Tail != nil {
+		ob := cur.OrderBook()
+		result, err = ob.Cost(cur.Tail.Asset, result)
+		if err != nil {
+			return
+		}
+		cur = cur.Tail
+	}
+
+	return
+}
 
 func (p *pathNode) String() string {
 	if p == nil {
@@ -115,22 +143,7 @@ func (p *pathNode) Flatten() (result []xdr.Asset) {
 		cur = cur.Tail
 	}
 }
-/*
-func (p *pathNode) CalculateMaxDistAmount() {
-	var result int64
-	var err error
-	cur := p
 
-	for cur.Tail != nil {
-		ob := cur.OrderBook()
-		result, err = ob.Cost(cur.Tail.Asset, result)
-		if err != nil {
-			return
-		}
-		cur = cur.Tail
-	}
-}
-*/
 func (p *pathNode) OrderBook() *orderBook {
 	if p.Tail == nil {
 		return nil
