@@ -54,20 +54,16 @@ func (action *BenefitsShowAction) loadQuery() {
 		println(action.Err)
 		return;
 	}
-	action.Query.DestinationAsset, action.Err = core.AssetFromDB(asset.AssetType, asset.AssetCode.String, asset.Issuer.String)
-	if action.Err != nil {
+		action.Query.DestinationAsset, action.Err = core.AssetFromDB(asset.AssetType, asset.AssetCode.String, asset.Issuer.String)
+		if action.Err != nil {
 		println(action.Err)
 		return;
 	}
 }
 
 func (action *BenefitsShowAction) loadAssets(){
-	action.Err = action.CoreQ().AssetsForBuying(
-		&action.ListAssets,
-	)
-	action.PossibleExchanges, action.Err = benefits.GeneratePossibleExchanges(action.ListAssets)
-	action.Bfts.InitPossibleExchanges(action.ListAssets)
-	action.Bfts.CheckValidExchanges(action.CoreQ())
+
+	action.Err = action.Bfts.Init(action.CoreQ())
 	if action.Err != nil {
 		println(action.Err)
 		return

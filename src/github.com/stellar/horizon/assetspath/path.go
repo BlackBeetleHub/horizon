@@ -30,26 +30,22 @@ func (p *pathNode)ReversePath() {
 }
 
 func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
-	//result =
-
 	if p.Tail == nil {
 		return
 	}
-
 	cur := p
 	result, _ = cur.OrderBook().MaxAvailebleCost(cur.Tail.Asset)
+	cur = cur.Tail
 	for cur.Tail != nil {
 		ob := cur.OrderBook()
-		result, err = ob.Cost(cur.Tail.Asset, result)
+		result, err = ob.MaxReciveCount(cur.Tail.Asset, result)
 		if err != nil {
 			return
 		}
 		cur = cur.Tail
 	}
-
 	return
 }
-
 func (p *pathNode) String() string {
 	if p == nil {
 		return ""

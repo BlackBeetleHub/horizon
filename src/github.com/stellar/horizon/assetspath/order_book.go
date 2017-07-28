@@ -23,6 +23,49 @@ type orderBook struct {
 }
 
 
+func (ob *orderBook) MaxReciveCount (source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {
+
+	var tmpSourceAmount int64
+	var canBuy int64
+	canBuy = 0
+	tmpSourceAmount = int64(sourceAmount)
+
+	sql, sqlBuildError := ob.GetSelectBuilderForCost(source)
+	inverted := assets.Equals(source, ob.Buying)
+	if sqlBuildError != nil {
+		return
+	}
+
+	rows, err := ob.Q.Query(sql)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		// load data from the row
+		var available, pricen, priced, offerid int64
+		if inverted {
+			err = rows.Scan(&available, &priced, &pricen, &offerid)
+			available = mul(available, pricen, priced)
+		} else {
+			err = rows.Scan(&available, &pricen, &priced, &offerid)
+		}
+
+		if err != nil {
+			break
+		}
+		av := mul(available, priced, pricen)
+		if av > tmpSourceAmount {
+			canBuy+= mul(tmpSourceAmount, priced, pricen)
+			return
+		}
+		canBuy += mul(available, priced, pricen)
+		tmpSourceAmount -= av
+	}
+
+	return xdr.Int64(canBuy), nil
+}
 
 func (ob *orderBook) MaxAvailebleCost(source xdr.Asset) (result xdr.Int64, err error) {
 	// load offers from the two assets
@@ -31,12 +74,6 @@ func (ob *orderBook) MaxAvailebleCost(source xdr.Asset) (result xdr.Int64, err e
 	inverted := assets.Equals(source, ob.Buying)
 	if sqlBuildError != nil {
 		return
-	}
-
-	if !inverted {
-		sql = sql.OrderBy("price ASC")
-	} else {
-		sql = sql.OrderBy("price DESC")
 	}
 
 	rows, err := ob.Q.Query(sql)

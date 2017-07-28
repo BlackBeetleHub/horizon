@@ -110,22 +110,14 @@ func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
 		return
 	}
 	cur := p
-	println(cur.Asset.String())
-	println(cur.Tail.Asset.String())
 	result, _ = cur.OrderBook().MaxAvailebleCost(cur.Tail.Asset)
 	cur = cur.Tail
-	println(result)
 	for cur.Tail != nil {
-		println("------Iter begin--------")
-		println(cur.Asset.String())
-		println(cur.Tail.Asset.String())
 		ob := cur.OrderBook()
 		result, err = ob.MaxReciveCount(cur.Tail.Asset, result)
 		if err != nil {
 			return
 		}
-		println(result)
-		println("------Iter end----------")
 		cur = cur.Tail
 	}
 	return

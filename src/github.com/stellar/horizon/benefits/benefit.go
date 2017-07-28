@@ -12,10 +12,23 @@ type Pathes struct{
 }
 
 type Benefit struct {
-
+	benefitChecker paths.BenefitsChecker
 	PossibleExchanges []paths.CoreExchange
 	PossiblePaths []Pathes
 	ResultPaths []Pathes
+	q *core.Q
+}
+
+func (benefit *Benefit) Init(q *core.Q) error {
+	var coreAssests []core.Asset
+	benefit.benefitChecker = &assetspath.BenefitsChecker {q}
+	err := q.AssetsForBuying(&coreAssests)
+	if err != nil {
+		return err
+	}
+	benefit.InitPossibleExchanges(coreAssests)
+	benefit.CheckValidExchanges()
+	return nil
 }
 
 func (benefit *Benefit) InitPossibleExchanges (listBuying []core.Asset) {
@@ -36,21 +49,20 @@ func SwapExchangeAssets(exchange paths.Exchange) paths.Exchange {
 	return paths.Exchange{exchange.SourceAsset, exchange.DestinationAsset}
 }
 
-func (benefit *Benefit) CheckValidExchanges(q *core.Q) {
+func (benefit *Benefit) CheckValidExchanges() {
 	println("Before validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
-	mBenefits := &assetspath.BenefitsChecker{q}
 	var validateResultWay []paths.CoreExchange
 	for i:=0; i < len(benefit.PossibleExchanges); i++ {
 		var exchange paths.Exchange
 		short := benefit.PossibleExchanges[i]
 		exchange.SourceAsset = short.Source.ToXdrAsset()
 		exchange.DestinationAsset = short.Dest.ToXdrAsset()
-		resBuy, _:= mBenefits.Find(exchange)
+		resBuy, _:= benefit.benefitChecker.Find(exchange)
 		if len(resBuy) == 0 {
 			continue;
 		}
 		exchange = SwapExchangeAssets(exchange)
-		resSell, _:= mBenefits.Find(exchange)
+		resSell, _:= benefit.benefitChecker.Find(exchange)
 		if len(resSell) == 0 {
 			continue;
 		}
@@ -60,24 +72,13 @@ func (benefit *Benefit) CheckValidExchanges(q *core.Q) {
 	println("After validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
 }
 
-func GetAmountForOperation() int64 {
-	return  1
+func (benefit *Benefit) GetPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error){
+	return benefit.benefitChecker.Find(exchange)
 }
 
-func GenerateBackPaths() {
-
-}
-
-func GenerateForwardPaths() {
-
-}
-
-func MaxCostForwardPath() {
-
-}
-
-func MaxCostBackPath(){
-
+func (benefit *Benefit) GetBackPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error){
+	reverseExchange := SwapExchangeAssets(exchange)
+	return benefit.benefitChecker.Find(reverseExchange)
 }
 
 func (benefit *Benefit) SearchBenefitInPath() {
