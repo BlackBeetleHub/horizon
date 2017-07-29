@@ -45,3 +45,5 @@ func (this *BasePath) PopulateBenefit(ctx context.Context, q paths.Exchange, p p
 func (this BasePath) PagingToken() string {
 	return ""
 }
+
+func (this *BenefitExchange)

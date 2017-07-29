@@ -14,9 +14,16 @@ type Pathes struct{
 type Benefit struct {
 	benefitChecker paths.BenefitsChecker
 	PossibleExchanges []paths.CoreExchange
+	BenefitExchanges []BenefitExchange
 	PossiblePaths []Pathes
 	ResultPaths []Pathes
 	q *core.Q
+}
+
+type BenefitExchange struct {
+	To paths.Path
+	Back paths.Path
+	AmountBenefit int64
 }
 
 func (benefit *Benefit) Init(q *core.Q) error {
@@ -37,22 +44,17 @@ func (benefit *Benefit) Start () {
 	exchange:= first.ToExchange()
 	firstPaths, err := benefit.GetPathsFromExchange(exchange)
 	if err != nil {
-		println(err)
-		println("GetPathsFromExchange error")
 		return
 	}
 	backPaths, err := benefit.GetBackPathsFromExchange(exchange)
-
 	if err != nil {
-		println(err)
-		println("GetBackPathsFromExchange error")
 		return
 	}
 
 	from:= firstPaths[0]
 	to:=backPaths[0]
 
-	res , err :=benefit.isBenefit(from, to)
+	res , err :=benefit.isBenefitPaths(from, to)
 	if err != nil {
 		println(err)
 	}
@@ -109,56 +111,67 @@ func (benefit *Benefit) GetBackPathsFromExchange(exchange paths.Exchange) (resul
 	return benefit.benefitChecker.Find(reverseExchange)
 }
 
-func (benefit *Benefit) SearchBenefitInPath() {
+func (benefit *Benefit) SearchBenefits () []BenefitExchange {
+	var benefitExchanges []BenefitExchange
 
+	pExcenges := &benefit.PossibleExchanges
+
+	for i:=0; i <len(*pExcenges); i++ {
+		res := benefit.SearchBenefitsInExchange((*pExcenges)[i].ToExchange())
+		if len(res) != 0 {
+			benefitExchanges = append(benefitExchanges, res...)
+		}
+		//benefitExchanges = append(benefitExchanges, res...)
+	}
+	return benefitExchanges
 }
 
-func (benefit *Benefit) isBenefit(front, back paths.Path) (bool, error) {
-
-	println("Front :")
-	assets:=front.Path()
-	println(front.Source().String())
-	for i:=0;i < len(assets);i++ {
-		println(assets[i].String())
+func (benefit *Benefit) SearchBenefitsInExchange(exchange paths.Exchange) []BenefitExchange {
+	var result []BenefitExchange
+	fronts,err := benefit.GetPathsFromExchange(exchange)
+	if err!=nil {
+		return result
 	}
-	println(front.Destination().String())
-
-	println("Back :")
-	println(back.Source().String())
-	assets =back.Path()
-	for i:=0;i < len(assets);i++ {
-		println(assets[i].String())
+	backs, err := benefit.GetBackPathsFromExchange(exchange)
+	if err != nil {
+		return result
 	}
-	println(back.Destination().String())
+	for i:=0; i< len(fronts); i++ {
+		for t:=0; t< len(backs); t++ {
+			isBenefit,err := benefit.isBenefitPaths(fronts[i],backs[t])
+			if err != nil {
+				// TODO: make validator
+			}
+			if isBenefit {
+				result = append(result,
+					BenefitExchange{ To:fronts[i], Back:backs[t], AmountBenefit:1 })
+			}
+		}
+	}
+	return result
+}
+
+func (benefit *Benefit) isBenefitPaths(front, back paths.Path) (bool, error) {
+
 	maxDistFront, err := front.MaxCost()
 	if (err !=nil || maxDistFront == 0){
-		println("maxDistFront")
 		return false, err
 	}
+
 	maxSourceFront, err := front.Cost(maxDistFront)
 	if (err != nil || maxSourceFront == 0){
-		println("maxSourceFront")
 		return false, err
 	}
+
 	maxDistBack, err := back.MaxCost()
 	if (err != nil || maxDistBack == 0) {
-		println("maxDistBack")
 		return false, err
 	}
+
 	maxSourceBack, err := back.Cost(maxDistBack)
 	if ( err != nil || maxSourceBack == 0) {
-		println("maxSourceBack")
 		return false, err
 	}
-	print("MaxSourceFront: ")
-	println(maxSourceFront)
-	print("maxDistFront: ")
-	println(maxDistFront)
-	print("MaxSourceBack: ")
-	println(maxSourceBack)
-	print("MaxDistBack: ")
-	println(maxDistBack)
-	println("Return true always!!!!")
 
 	if maxDistFront > maxSourceBack {
 		maxDistFront = maxSourceBack
@@ -170,17 +183,8 @@ func (benefit *Benefit) isBenefit(front, back paths.Path) (bool, error) {
 	}
 
 	if maxSourceBack > maxDistFront {
-
 		maxDistBack = maxSourceFront
 		maxSourceBack, err = back.Cost(maxDistBack)
-		print("MaxSourceFront: ")
-		println(maxSourceFront)
-		print("maxDistFront: ")
-		println(maxDistFront)
-		print("MaxSourceBack: ")
-		println(maxSourceBack)
-		print("MaxDistBack: ")
-		println(maxDistBack)
 		if (err !=nil || maxSourceFront == 0) {
 			return false, err
 		}
