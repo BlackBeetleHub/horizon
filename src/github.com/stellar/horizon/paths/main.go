@@ -22,6 +22,14 @@ type CoreExchange struct {
 	Dest    core.Asset
 	Source  core.Asset
 }
+
+func (exc *CoreExchange) ToExchange() Exchange{
+	var exchange Exchange
+	exchange.SourceAsset = exc.Source.ToXdrAsset()
+	exchange.DestinationAsset = exc.Dest.ToXdrAsset()
+	return exchange
+}
+
 // Path is the interface that represents a single result returned
 // by a path finder.
 type Path interface {

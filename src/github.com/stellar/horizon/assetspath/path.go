@@ -40,11 +40,11 @@ func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
 		ob := cur.OrderBook()
 		result, err = ob.MaxReciveCount(cur.Tail.Asset, result)
 		if err != nil {
-			return
+			return result, err
 		}
 		cur = cur.Tail
 	}
-	return
+	return result, err
 }
 func (p *pathNode) String() string {
 	if p == nil {

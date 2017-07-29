@@ -58,7 +58,7 @@ func (ob *orderBook) MaxReciveCount (source xdr.Asset, sourceAmount xdr.Int64) (
 		av := mul(available, priced, pricen)
 		if av > tmpSourceAmount {
 			canBuy+= mul(tmpSourceAmount, priced, pricen)
-			return
+			return xdr.Int64(canBuy), nil
 		}
 		canBuy += mul(available, priced, pricen)
 		tmpSourceAmount -= av
