@@ -41,24 +41,6 @@ func (this *BasePath) PopulateBasePath(ctx context.Context, p paths.Path) (err e
 }
 
 func (this *BasePath) PopulateBenefit(ctx context.Context, q paths.Exchange, p paths.Path) (err error) {
-
-	err = p.Source().Extract(
-		&this.SourceAssetType,
-		&this.SourceAssetCode,
-		&this.SourceAssetIssuer)
-
-	if err != nil {
-		return
-	}
-
-	err = p.Destination().Extract(
-		&this.DestinationAssetType,
-		&this.DestinationAssetCode,
-		&this.DestinationAssetIssuer)
-
-	if err != nil {
-		return
-	}
 	this.PopulateBasePath(ctx, p)
 	return
 }

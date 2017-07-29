@@ -7,16 +7,10 @@ import (
 	"strconv"
 )
 
-type Pathes struct{
-	Paths []paths.Path
-}
-
 type Benefit struct {
 	benefitChecker paths.BenefitsChecker
 	PossibleExchanges []paths.CoreExchange
 	BenefitExchanges []BenefitExchange
-	PossiblePaths []Pathes
-	ResultPaths []Pathes
 	q *core.Q
 }
 
@@ -125,8 +119,6 @@ func (benefit *Benefit) SearchBenefitsInExchange(exchange paths.Exchange) []Bene
 				// TODO: make validator
 			}
 			if isBenefit {
-				println("Benefit!")
-				
 				result = append(result,
 					BenefitExchange{ To:fronts[i], Back:backs[t], AmountBenefit:1 })
 			}

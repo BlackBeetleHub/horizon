@@ -20,11 +20,6 @@ func GeneratePossibleExchanges(listBuying []core.Asset) ([]paths.CoreExchange, e
 	return result, errors.New("Error, the count of possible exchanges is zero.")
 }
 
-func isBenefit(paths []paths.Path) bool {
-
-	return true
-}
-
 
 
 
