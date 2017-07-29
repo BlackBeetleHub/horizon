@@ -163,6 +163,12 @@ type Assets struct{
 	SellingAssets  []Asset `json:"selling_assets"`
 }
 
+type BenefitExchange struct {
+	FromTo Path `json:"from_to"`
+	ToFrom Path `json:"to_from"`
+	//Amount string
+}
+
 // Root is the initial map of links into the api.
 type Root struct {
 	Links struct {

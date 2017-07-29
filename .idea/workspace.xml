@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="82e97283-4dd3-4989-aad9-c3b6336b14d4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/benefit.go" afterPath="$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/benefit.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go" afterPath="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go" afterPath="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +18,8 @@
       <file leaf-file-name="benefit.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/benefit.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="26" lean-forward="true" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+            <state relative-caret-position="306">
+              <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
               <folding>
                 <element signature="e#18#155#0" expanded="true" />
               </folding>
@@ -27,21 +27,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="benefit.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="benefit.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+            <state relative-caret-position="408">
+              <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/paths/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="34" column="5" lean-forward="false" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="521">
-              <caret line="314" column="0" lean-forward="true" selection-start-line="314" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
+            <state relative-caret-position="351">
+              <caret line="165" column="20" lean-forward="false" selection-start-line="165" selection-start-column="5" selection-end-line="165" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/base/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="37" lean-forward="true" selection-start-line="8" selection-start-column="37" selection-end-line="8" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -99,7 +119,6 @@
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/main_generated.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/app.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/init_path_finder.go" />
-        <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/db2/core/assets.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/main.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/db2/core/main.go" />
@@ -116,6 +135,7 @@
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/assetspath/path.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/assetspath/order_book.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/benefit.go" />
+        <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go" />
         <option value="$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go" />
       </list>
     </option>
@@ -597,13 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/base/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/balance.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -887,14 +900,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/paths/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://M:/Go/src/builtin/builtin.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -903,28 +908,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go">
+    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="47" column="0" lean-forward="true" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+        <state relative-caret-position="351">
+          <caret line="165" column="20" lean-forward="false" selection-start-line="165" selection-start-column="5" selection-end-line="165" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/base/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="37" lean-forward="true" selection-start-line="8" selection-start-column="37" selection-end-line="8" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/benefits/benefit.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="26" lean-forward="true" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+        <state relative-caret-position="306">
+          <caret line="24" column="17" lean-forward="false" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
           <folding>
             <element signature="e#18#155#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/main.go">
+    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/paths/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="521">
-          <caret line="314" column="0" lean-forward="true" selection-start-line="314" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
+        <state relative-caret-position="207">
+          <caret line="34" column="5" lean-forward="false" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/github.com/stellar/horizon/resource/benefit.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
           <folding />
         </state>
       </provider>
