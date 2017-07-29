@@ -3,10 +3,27 @@ package resource
 import (
 	"github.com/stellar/horizon/paths"
 	"context"
+	"github.com/stellar/horizon/benefits"
 )
 
 func (this *BasePath) PopulateBasePath(ctx context.Context, p paths.Path) (err error) {
+	err = p.Source().Extract(
+		&this.SourceAssetType,
+		&this.SourceAssetCode,
+		&this.SourceAssetIssuer)
 
+	if err != nil {
+		return
+	}
+
+	err = p.Destination().Extract(
+		&this.DestinationAssetType,
+		&this.DestinationAssetCode,
+		&this.DestinationAssetIssuer)
+
+	if err != nil {
+		return
+	}
 	path := p.Path()
 
 	this.Path = make([]Asset, len(path))
@@ -42,21 +59,7 @@ func (this *BasePath) PopulateBenefit(ctx context.Context, q paths.Exchange, p p
 	if err != nil {
 		return
 	}
-
-	path := p.Path()
-
-	this.Path = make([]Asset, len(path))
-	//this.PopulateBasePath(ctx, p)
-	for i, a := range path {
-		err = a.Extract(
-			&this.Path[i].Type,
-			&this.Path[i].Code,
-			&this.Path[i].Issuer)
-		if err != nil {
-			return
-		}
-	}
-
+	this.PopulateBasePath(ctx, p)
 	return
 }
 
@@ -64,6 +67,15 @@ func (this BasePath) PagingToken() string {
 	return ""
 }
 
-func (this *BenefitExchange) Populate() string{
+func (this *BenefitExchange) Populate(ctx context.Context, bp benefits.BenefitExchange) (err error) {
+	err = this.FromTo.PopulateBasePath(ctx, bp.To)
+	if err != nil {
+		return
+	}
+	err = this.ToFrom.PopulateBasePath(ctx, bp.Back)
+	return
+}
 
+func (this BenefitExchange) PagingToken() string {
+	return ""
 }

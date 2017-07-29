@@ -40,25 +40,7 @@ func (benefit *Benefit) Init(q *core.Q) error {
 }
 
 func (benefit *Benefit) Start () {
-	first := benefit.PossibleExchanges[12]
-	exchange:= first.ToExchange()
-	firstPaths, err := benefit.GetPathsFromExchange(exchange)
-	if err != nil {
-		return
-	}
-	backPaths, err := benefit.GetBackPathsFromExchange(exchange)
-	if err != nil {
-		return
-	}
-
-	from:= firstPaths[0]
-	to:=backPaths[0]
-
-	res , err :=benefit.isBenefitPaths(from, to)
-	if err != nil {
-		println(err)
-	}
-	println(res)
+	benefit.BenefitExchanges = benefit.SearchBenefits()
 }
 
 func (benefit *Benefit) InitPossibleExchanges (listBuying []core.Asset) {
@@ -143,6 +125,8 @@ func (benefit *Benefit) SearchBenefitsInExchange(exchange paths.Exchange) []Bene
 				// TODO: make validator
 			}
 			if isBenefit {
+				println("Benefit!")
+				
 				result = append(result,
 					BenefitExchange{ To:fronts[i], Back:backs[t], AmountBenefit:1 })
 			}

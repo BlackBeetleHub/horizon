@@ -160,10 +160,6 @@ func (ob *orderBook) Cost(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.
 		cost   int64
 	)
 
-	check, _ := ob.MaxAvailebleCost(source)
-	if check > sourceAmount {
-		println("True check > sourceAmount")
-	}
 	for rows.Next() {
 		// load data from the row
 		var available, pricen, priced, offerid int64
