@@ -21,7 +21,6 @@ type orderBook struct {
 	Q       *core.Q
 }
 
-
 func (ob *orderBook)GetSelectBuilderForCost(source xdr.Asset) (sq.SelectBuilder, error) {
 	var (
 		// selling/buying types
@@ -58,53 +57,6 @@ func (ob *orderBook)GetSelectBuilderForCost(source xdr.Asset) (sq.SelectBuilder,
 	}
 
 	return sql, err
-}
-
-func (ob *orderBook) MaxAvaiebleAmount(source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {
-	// load offers from the two assets
-
-	sql, sqlBuildError := ob.GetSelectBuilderForCost(source)
-	inverted := assets.Equals(source, ob.Buying)
-	if sqlBuildError != nil {
-		return
-	}
-
-	rows, err := ob.Q.Query(sql)
-	if err != nil {
-		return
-	}
-	defer rows.Close()
-
-	var (
-		needed = int64(sourceAmount)
-		cost   int64
-	)
-
-	for rows.Next() {
-		// load data from the row
-		var available, pricen, priced, offerid int64
-		if inverted {
-			err = rows.Scan(&available, &priced, &pricen, &offerid)
-			available = mul(available, pricen, priced)
-		} else {
-			err = rows.Scan(&available, &pricen, &priced, &offerid)
-		}
-		if err != nil {
-			return
-		}
-
-		if available >= needed {
-			cost += mul(needed, pricen, priced)
-			result = xdr.Int64(cost)
-			return
-		}
-
-		cost += mul(available, pricen, priced)
-		needed -= available
-	}
-
-	err = nil
-	return xdr.Int64(cost), err
 }
 
 func (ob *orderBook) MaxReciveCount (source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {

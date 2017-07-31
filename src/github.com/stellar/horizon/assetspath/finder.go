@@ -24,7 +24,3 @@ func (f *BenefitsChecker) Find(q paths.Exchange) (result []paths.Path, err error
 
 	return
 }
-
-func (f* BenefitsChecker) Check(q paths.Exchange) bool {
-	return true
-}

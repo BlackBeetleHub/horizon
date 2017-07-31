@@ -111,7 +111,3 @@ func (s *search) extendSearch(cur *pathNode) {
 		s.queue = append(s.queue, newPath)
 	}
 }
-
-func (s *search) hasEnoughDepth(path *pathNode) (bool, error) {
-	return true, nil
-}

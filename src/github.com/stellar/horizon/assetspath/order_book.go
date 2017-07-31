@@ -22,7 +22,6 @@ type orderBook struct {
 	Q       *core.Q
 }
 
-
 func (ob *orderBook) MaxReciveCount (source xdr.Asset, sourceAmount xdr.Int64) (result xdr.Int64, err error) {
 
 	var tmpSourceAmount int64

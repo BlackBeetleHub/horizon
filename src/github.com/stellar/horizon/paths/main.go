@@ -40,7 +40,6 @@ type Path interface {
 	// that is suitable for use as the `sendMax` field for a `PathPaymentOp` struct.
 	Cost(amount xdr.Int64) (xdr.Int64, error)
 	MaxCost() (result xdr.Int64, err error)
-	MaxCostBack() (result xdr.Int64, err error)
 }
 
 type Paths struct {

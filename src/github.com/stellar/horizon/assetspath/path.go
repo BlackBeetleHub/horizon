@@ -21,14 +21,6 @@ type pathNode struct {
 // check interface compatibility
 var _ paths.Path = &pathNode{}
 
-func (p* pathNode)MaxCostBack() (result xdr.Int64, err error) {
-	return
-}
-
-func (p *pathNode)ReversePath() {
-	return
-}
-
 func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
 	if p.Tail == nil {
 		return
@@ -46,6 +38,7 @@ func (p *pathNode) MaxCost() (result xdr.Int64, err error) {
 	}
 	return result, err
 }
+
 func (p *pathNode) String() string {
 	if p == nil {
 		return ""
