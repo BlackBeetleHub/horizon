@@ -5,6 +5,7 @@ import (
 	"github.com/stellar/horizon/db2/core"
 	"github.com/stellar/horizon/log"
 	"github.com/stellar/horizon/paths"
+	"github.com/stellar/go/xdr"
 )
 
 // Finder implements the paths.Finder interface and searchs for
@@ -18,6 +19,30 @@ type Finder struct {
 
 // ensure the struct is paths.Finder compliant
 var _ paths.Finder = &Finder{}
+
+func (f *Finder) FindFromExchange(exchange paths.Exchange) (result []paths.Path, err error) {
+
+	var sourceAssets []xdr.Asset
+	sourceAssets = append(sourceAssets, exchange.SourceAsset)
+
+	q := paths.Query{
+		SourceAssets: sourceAssets,
+		DestinationAsset: exchange.DestinationAsset,
+	}
+
+	s := &Search{
+		Query:   q,
+		Finder:  f,
+		isCheck: true,
+	}
+
+	s.Init()
+	s.Run()
+
+	result, err = s.Results, s.Err
+
+	return
+}
 
 // Find performs a path find with the provided query.
 func (f *Finder) Find(q paths.Query) (result []paths.Path, err error) {
@@ -34,6 +59,7 @@ func (f *Finder) Find(q paths.Query) (result []paths.Path, err error) {
 	s := &Search{
 		Query:  q,
 		Finder: f,
+		isCheck: false,
 	}
 
 	s.Init()

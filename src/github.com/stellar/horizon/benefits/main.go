@@ -1,7 +1,6 @@
 package benefits
 
 import (
-//	sq "github.com/Masterminds/squirrel"
 	"github.com/stellar/horizon/db2/core"
 	"github.com/stellar/horizon/paths"
 	"github.com/pkg/errors"
@@ -19,9 +18,6 @@ func GeneratePossibleExchanges(listBuying []core.Asset) ([]paths.CoreExchange, e
 	}
 	return result, errors.New("Error, the count of possible exchanges is zero.")
 }
-
-
-
 
 
 

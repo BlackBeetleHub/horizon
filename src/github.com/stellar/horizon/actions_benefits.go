@@ -10,7 +10,7 @@ type BenefitsShowAction struct {
 	Action
 	Page    hal.BasePage
 	Records []benefits.BenefitExchange
-	Bfts benefits.Benefit
+	Bfts benefits.Benefits
 }
 
 func (action *BenefitsShowAction) JSON()  {
@@ -34,6 +34,7 @@ func (action *BenefitsShowAction) loadAssets(){
 		println(action.Err)
 		return
 	}
+	action.Bfts.Start()
 }
 
 func (action *BenefitsShowAction) loadResource(){

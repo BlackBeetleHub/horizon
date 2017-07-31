@@ -48,8 +48,5 @@ type Paths struct {
 // Finder finds paths.
 type Finder interface {
 	Find(Query) ([]Path, error)
-}
-
-type BenefitsChecker interface {
-	Find(exchange Exchange) ([]Path, error)
+	FindFromExchange(exchange Exchange) ([]Path, error)
 }

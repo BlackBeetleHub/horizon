@@ -4,6 +4,7 @@ import (
 	"github.com/stellar/horizon/paths"
 	"context"
 	"github.com/stellar/horizon/benefits"
+	"strconv"
 )
 
 func (this *BasePath) PopulateBasePath(ctx context.Context, p paths.Path) (err error) {
@@ -55,6 +56,7 @@ func (this *BenefitExchange) Populate(ctx context.Context, bp benefits.BenefitEx
 		return
 	}
 	err = this.ToFrom.PopulateBasePath(ctx, bp.Back)
+	this.Profit = strconv.FormatInt(bp.Profit,10)
 	return
 }
 

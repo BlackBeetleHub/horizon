@@ -16,9 +16,9 @@ import (
 // 3.  Call Run() to perform the Search.
 //
 type Search struct {
-	Query  paths.Query
-	Finder *Finder
-
+	Query   paths.Query
+	Finder  *Finder
+	isCheck bool
 	// Fields below are initialized by a call to Init() after
 	// setting the fields above
 	queue   []*PathNode
@@ -40,7 +40,6 @@ func (s *Search) Init() {
 			Q:     s.Finder.Q,
 		},
 	}
-	println("check simplepath work")
 	// build a map of asset's string representation to check if a given node
 	// is one of the targets for our Search.  Unfortunately, xdr.Asset is not suitable
 	// for use as a map key, and so we use its string representation.
@@ -144,14 +143,16 @@ func (s *Search) extendSearch(cur *PathNode) {
 			Q:     s.Finder.Q,
 		}
 
-		var hasEnough bool
-		hasEnough, s.Err = s.hasEnoughDepth(newPath)
-		if s.Err != nil {
-			return
-		}
+		if !(s.isCheck) {
+			var hasEnough bool
+			hasEnough, s.Err = s.hasEnoughDepth(newPath)
+			if s.Err != nil {
+				return
+			}
 
-		if !hasEnough {
-			continue
+			if !hasEnough {
+				continue
+			}
 		}
 
 		s.queue = append(s.queue, newPath)

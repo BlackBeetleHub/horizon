@@ -164,9 +164,9 @@ type Assets struct{
 }
 
 type BenefitExchange struct {
-	FromTo Path `json:"from_to"`
-	ToFrom Path `json:"to_from"`
-	//Amount string
+	FromTo Path  `json:"from_to"`
+	ToFrom Path  `json:"to_from"`
+	Profit string `json:"profit"`
 }
 
 // Root is the initial map of links into the api.

@@ -3,44 +3,40 @@ package benefits
 import (
 	"github.com/stellar/horizon/paths"
 	"github.com/stellar/horizon/db2/core"
-	"github.com/stellar/horizon/assetspath"
+	"github.com/stellar/horizon/simplepath"
 	"strconv"
 )
 
-type Benefit struct {
-	benefitChecker paths.BenefitsChecker
+type Benefits struct {
+	benefitChecker    paths.Finder
 	PossibleExchanges []paths.CoreExchange
-	BenefitExchanges []BenefitExchange
-	q *core.Q
+	BenefitExchanges  []BenefitExchange
+	q                 *core.Q
 }
 
-type BenefitExchange struct {
-	To paths.Path
-	Back paths.Path
-	AmountBenefit int64
-}
-
-func (benefit *Benefit) Init(q *core.Q) error {
+func (benefit *Benefits) Init(q *core.Q) error {
 	var coreAssests []core.Asset
-	benefit.benefitChecker = &assetspath.BenefitsChecker {q}
+	benefit.benefitChecker = &simplepath.Finder{q}
 	err := q.AssetsForBuying(&coreAssests)
 	if err != nil {
 		return err
 	}
 	benefit.InitPossibleExchanges(coreAssests)
 	benefit.CheckValidExchanges()
-	benefit.Start()
 	return nil
 }
 
-func (benefit *Benefit) Start () {
+func (benefit *Benefits) Start() {
 	benefit.BenefitExchanges = benefit.SearchBenefits()
 }
 
-func (benefit *Benefit) InitPossibleExchanges (listBuying []core.Asset) {
+// Create all possible exchanges without back.
+// Exemple: if we have 6 assets - we'll give 15 Exchanges.
+// For check result: C (n,k) where k = 2 , n = len([]core.Asset); C (6,2) = 15.
+func (benefit *Benefits) InitPossibleExchanges(listBuying []core.Asset) {
 	var result []paths.CoreExchange
 	for i := 0; i < len(listBuying); i++ {
-		for t:= i + 1; t < len(listBuying); t++ {
+		for t := i + 1; t < len(listBuying); t++ {
 			result = append(result, paths.CoreExchange{listBuying[i], listBuying[t]})
 		}
 	}
@@ -55,20 +51,22 @@ func SwapExchangeAssets(exchange paths.Exchange) paths.Exchange {
 	return paths.Exchange{exchange.SourceAsset, exchange.DestinationAsset}
 }
 
-func (benefit *Benefit) CheckValidExchanges() {
+// Check possible Exchanges. It deletes exchange if it doesn't find path forwar or back.
+// Not all assets possible get back.
+func (benefit *Benefits) CheckValidExchanges() {
 	println("Before validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
 	var validateResultWay []paths.CoreExchange
-	for i:=0; i < len(benefit.PossibleExchanges); i++ {
+	for i := 0; i < len(benefit.PossibleExchanges); i++ {
 		var exchange paths.Exchange
 		short := benefit.PossibleExchanges[i]
 		exchange.SourceAsset = short.Source.ToXdrAsset()
 		exchange.DestinationAsset = short.Dest.ToXdrAsset()
-		resBuy, _:= benefit.benefitChecker.Find(exchange)
+		resBuy, _ := benefit.benefitChecker.FindFromExchange(exchange)
 		if len(resBuy) == 0 {
 			continue;
 		}
 		exchange = SwapExchangeAssets(exchange)
-		resSell, _:= benefit.benefitChecker.Find(exchange)
+		resSell, _ := benefit.benefitChecker.FindFromExchange(exchange)
 		if len(resSell) == 0 {
 			continue;
 		}
@@ -78,21 +76,21 @@ func (benefit *Benefit) CheckValidExchanges() {
 	println("After validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
 }
 
-func (benefit *Benefit) GetPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error){
-	return benefit.benefitChecker.Find(exchange)
+func (benefit *Benefits) GetPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error) {
+	return benefit.benefitChecker.FindFromExchange(exchange)
 }
 
-func (benefit *Benefit) GetBackPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error){
+func (benefit *Benefits) GetBackPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error) {
 	reverseExchange := SwapExchangeAssets(exchange)
-	return benefit.benefitChecker.Find(reverseExchange)
+	return benefit.benefitChecker.FindFromExchange(reverseExchange)
 }
 
-func (benefit *Benefit) SearchBenefits () []BenefitExchange {
+func (benefit *Benefits) SearchBenefits() []BenefitExchange {
 	var benefitExchanges []BenefitExchange
 
 	pExcenges := &benefit.PossibleExchanges
 
-	for i:=0; i <len(*pExcenges); i++ {
+	for i := 0; i < len(*pExcenges); i++ {
 		res := benefit.SearchBenefitsInExchange((*pExcenges)[i].ToExchange())
 		if len(res) != 0 {
 			benefitExchanges = append(benefitExchanges, res...)
@@ -102,69 +100,90 @@ func (benefit *Benefit) SearchBenefits () []BenefitExchange {
 	return benefitExchanges
 }
 
-func (benefit *Benefit) SearchBenefitsInExchange(exchange paths.Exchange) []BenefitExchange {
+func (benefit *Benefits) SearchBenefitsInExchange(exchange paths.Exchange) []BenefitExchange {
 	var result []BenefitExchange
-	fronts,err := benefit.GetPathsFromExchange(exchange)
-	if err!=nil {
+	fronts, err := benefit.GetPathsFromExchange(exchange)
+	if err != nil {
 		return result
 	}
 	backs, err := benefit.GetBackPathsFromExchange(exchange)
 	if err != nil {
 		return result
 	}
-	for i:=0; i< len(fronts); i++ {
-		for t:=0; t< len(backs); t++ {
-			isBenefit,err := benefit.isBenefitPaths(fronts[i],backs[t])
+	for i := 0; i < len(fronts); i++ {
+		for t := 0; t < len(backs); t++ {
+			isBenefit, profit, err := benefit.isBenefitPaths(fronts[i], backs[t])
 			if err != nil {
-				// TODO: make validator
+				println("Something wrong: SearchBenefitsInExchange, isBenefitPaths.")
+				println(err.Error())
 			}
 			if isBenefit {
 				result = append(result,
-					BenefitExchange{ To:fronts[i], Back:backs[t], AmountBenefit:1 })
+					BenefitExchange{To: fronts[i], Back: backs[t], Profit: profit })
 			}
 		}
 	}
 	return result
 }
 
-func (benefit *Benefit) isBenefitPaths(front, back paths.Path) (bool, error) {
+func (benefit *Benefits) isBenefitPaths(front, back paths.Path) (bool, int64, error) {
 
 	maxDistFront, err := front.MaxCost()
-	if (err !=nil || maxDistFront == 0){
-		return false, err
+	if (err != nil || maxDistFront == 0) {
+		return false, 0, err
 	}
 
 	maxSourceFront, err := front.Cost(maxDistFront)
-	if (err != nil || maxSourceFront == 0){
-		return false, err
+	if (err != nil || maxSourceFront == 0) {
+		return false, 0, err
 	}
 
 	maxDistBack, err := back.MaxCost()
 	if (err != nil || maxDistBack == 0) {
-		return false, err
+		return false, 0, err
 	}
 
 	maxSourceBack, err := back.Cost(maxDistBack)
 	if ( err != nil || maxSourceBack == 0) {
-		return false, err
+		return false, 0, err
 	}
 
 	if maxDistFront > maxSourceBack {
 		maxDistFront = maxSourceBack
-		maxSourceFront,err = front.Cost(maxDistFront)
+		maxSourceFront, err = front.Cost(maxDistFront)
 		if (err != nil || maxSourceFront == 0) {
-			return false, err
+			return false, 0, err
 		}
-		return (maxSourceFront < maxDistBack), err
+		if (maxSourceFront < maxDistBack) {
+			return true, int64(maxDistBack - maxSourceFront), err
+		}
 	}
 
-	if maxSourceBack > maxDistFront {
+	if (maxSourceBack > maxDistFront && maxSourceFront > maxDistBack) {
+		return false, 0, err
+	}
+
+	if (maxSourceBack > maxDistFront) {
 		maxDistBack = maxSourceFront
 		maxSourceBack, err = back.Cost(maxDistBack)
-		if (err !=nil || maxSourceFront == 0) {
-			return false, err
+		if (err != nil || maxSourceFront == 0) {
+			return false,0 , err
 		}
-		return (maxSourceBack < maxDistFront), err
+		if (maxSourceBack < maxDistFront) {
+			maxDistFront = maxSourceBack
+			maxSourceFront, err = front.Cost(maxDistFront)
+			if err!=nil {
+				return false,0 , err
+			}
+			//println(int64(maxDistBack - maxSourceFront))
+			//print("maxDistBack:" + strconv.FormatInt(int64(maxDistBack),10))
+
+			print("maxSourceFront:" + strconv.FormatInt(int64(maxSourceFront),10))
+			if (maxSourceFront < maxDistBack) {
+				return true, int64(maxDistBack - maxSourceFront), err
+			}
+			//return true,int64(maxDistBack - maxSourceFront) , err
+		}
 	}
-	return false, err
+	return false,0, err
 }
