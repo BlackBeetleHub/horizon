@@ -3,13 +3,14 @@ package assetspath
 import (
 	"github.com/stellar/go/xdr"
 	"github.com/stellar/horizon/paths"
+	smPath "github.com/stellar/horizon/simplepath"
 )
 
 type search struct {
 	Exchange  		paths.Exchange
 	BenefitsChecker *BenefitsChecker
 
-	queue   []*pathNode
+	queue   []*smPath.PathNode
 	targets map[string]bool
 	visited map[string]bool
 
@@ -18,8 +19,8 @@ type search struct {
 }
 
 func (s *search) Init() {
-	s.queue = []*pathNode{
-		&pathNode{
+	s.queue = []*smPath.PathNode{
+		&smPath.PathNode{
 			Asset: s.Exchange.DestinationAsset,
 			Tail:  nil,
 			Q:     s.BenefitsChecker.Q,
@@ -43,7 +44,7 @@ func (s *search) Run() {
 	}
 }
 
-func (s *search) pop() *pathNode {
+func (s *search) pop() *smPath.PathNode {
 	next := s.queue[0]
 	s.queue = s.queue[1:]
 	return next
@@ -94,7 +95,7 @@ func (s *search) runOnce() {
 	s.extendSearch(cur)
 }
 
-func (s *search) extendSearch(cur *pathNode) {
+func (s *search) extendSearch(cur *smPath.PathNode) {
 	var connected []xdr.Asset
 	s.Err = s.BenefitsChecker.Q.ConnectedAssets(&connected, cur.Asset)
 	if s.Err != nil {
@@ -102,7 +103,7 @@ func (s *search) extendSearch(cur *pathNode) {
 	}
 
 	for _, a := range connected {
-		newPath := &pathNode{
+		newPath := &smPath.PathNode{
 			Asset: a,
 			Tail:  cur,
 			Q:     s.BenefitsChecker.Q,

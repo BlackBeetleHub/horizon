@@ -5,36 +5,36 @@ import (
 	"github.com/stellar/horizon/paths"
 )
 
-// search represents a single query against the simple finder.  It provides
+// Search represents a single query against the simple finder.  It provides
 // a place to store the results of the query, mostly for the purposes of code
 // clarity.
 //
-// The search struct is used as follows:
+// The Search struct is used as follows:
 //
 // 1.  Create an instance, ensuring the Query and Finder fields are set
 // 2.  Call Init() to populate dependent fields in the struct with their initial values
-// 3.  Call Run() to perform the search.
+// 3.  Call Run() to perform the Search.
 //
-type search struct {
+type Search struct {
 	Query  paths.Query
 	Finder *Finder
 
 	// Fields below are initialized by a call to Init() after
 	// setting the fields above
-	queue   []*pathNode
+	queue   []*PathNode
 	targets map[string]bool
 	visited map[string]bool
 
-	//This fields below are initialized after the search is run
+	//This fields below are initialized after the Search is run
 	Err     error
 	Results []paths.Path
 }
 
-// Init initialized the search, setting fields on the struct used to
-// hold state needed during the actual search.
-func (s *search) Init() {
-	s.queue = []*pathNode{
-		&pathNode{
+// Init initialized the Search, setting fields on the struct used to
+// hold state needed during the actual Search.
+func (s *Search) Init() {
+	s.queue = []*PathNode{
+		&PathNode{
 			Asset: s.Query.DestinationAsset,
 			Tail:  nil,
 			Q:     s.Finder.Q,
@@ -42,7 +42,7 @@ func (s *search) Init() {
 	}
 	println("check simplepath work")
 	// build a map of asset's string representation to check if a given node
-	// is one of the targets for our search.  Unfortunately, xdr.Asset is not suitable
+	// is one of the targets for our Search.  Unfortunately, xdr.Asset is not suitable
 	// for use as a map key, and so we use its string representation.
 	s.targets = map[string]bool{}
 	for _, a := range s.Query.SourceAssets {
@@ -54,9 +54,9 @@ func (s *search) Init() {
 	s.Results = nil
 }
 
-// Run triggers the search, which will populate the Results and Err
-// field for the search after completion.
-func (s *search) Run() {
+// Run triggers the Search, which will populate the Results and Err
+// field for the Search after completion.
+func (s *Search) Run() {
 	if s.Err != nil {
 		return
 	}
@@ -66,15 +66,15 @@ func (s *search) Run() {
 	}
 }
 
-// pop removes the head from the search queue, returning it to the caller
-func (s *search) pop() *pathNode {
+// pop removes the head from the Search queue, returning it to the caller
+func (s *Search) pop() *PathNode {
 	next := s.queue[0]
 	s.queue = s.queue[1:]
 	return next
 }
 
-// returns false if the search should stop.
-func (s *search) hasMore() bool {
+// returns false if the Search should stop.
+func (s *Search) hasMore() bool {
 	if s.Err != nil {
 		return false
 	}
@@ -87,15 +87,15 @@ func (s *search) hasMore() bool {
 }
 
 // isTarget returns true if the asset id provided is one of the targets
-// for this search (i.e. one of the requesting account's trusted assets)
-func (s *search) isTarget(id string) bool {
+// for this Search (i.e. one of the requesting account's trusted assets)
+func (s *Search) isTarget(id string) bool {
 	_, found := s.targets[id]
 	return found
 }
 
 // visit returns true if the asset id provided has not been
-// visited on this search, after marking the id as visited
-func (s *search) visit(id string) bool {
+// visited on this Search, after marking the id as visited
+func (s *Search) visit(id string) bool {
 	if _, found := s.visited[id]; found {
 		return false
 	}
@@ -104,9 +104,9 @@ func (s *search) visit(id string) bool {
 	return true
 }
 
-// runOnce processes the head of the search queue, findings results
-// and extending the search as necessary.
-func (s *search) runOnce() {
+// runOnce processes the head of the Search queue, findings results
+// and extending the Search as necessary.
+func (s *Search) runOnce() {
 	cur := s.pop()
 	id := cur.Asset.String()
 
@@ -119,7 +119,7 @@ func (s *search) runOnce() {
 	}
 
 	// A PathPaymentOp's path cannot be over 5 elements in length, and so
-	// we abort our search if the current linked list is over 7 (since the list
+	// we abort our Search if the current linked list is over 7 (since the list
 	// includes both source and destination in addition to the path)
 	if cur.Depth() > 7 {
 		return
@@ -129,7 +129,7 @@ func (s *search) runOnce() {
 
 }
 
-func (s *search) extendSearch(cur *pathNode) {
+func (s *Search) extendSearch(cur *PathNode) {
 	// find connected assets
 	var connected []xdr.Asset
 	s.Err = s.Finder.Q.ConnectedAssets(&connected, cur.Asset)
@@ -138,7 +138,7 @@ func (s *search) extendSearch(cur *pathNode) {
 	}
 
 	for _, a := range connected {
-		newPath := &pathNode{
+		newPath := &PathNode{
 			Asset: a,
 			Tail:  cur,
 			Q:     s.Finder.Q,
@@ -158,7 +158,7 @@ func (s *search) extendSearch(cur *pathNode) {
 	}
 }
 
-func (s *search) hasEnoughDepth(path *pathNode) (bool, error) {
+func (s *Search) hasEnoughDepth(path *PathNode) (bool, error) {
 	_, err := path.Cost(s.Query.DestinationAmount)
 	if err == ErrNotEnough {
 		return false, nil
