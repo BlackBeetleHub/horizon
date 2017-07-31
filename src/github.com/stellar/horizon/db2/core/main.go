@@ -38,6 +38,8 @@ type LedgerHeader struct {
 	Data           xdr.LedgerHeader `db:"data"`
 }
 
+
+
 // Offer is row of data from the `offers` table from stellar-core
 type Offer struct {
 	SellerID string `db:"sellerid"`
@@ -126,6 +128,12 @@ type Trustline struct {
 	Flags     int32
 }
 
+type Asset struct {
+	AssetType xdr.AssetType `db:"assettype"`
+	AssetCode null.String   `db:"assetcode"`
+	Issuer    null.String   `db:"issuer"`
+}
+
 // AssetFromDB produces an xdr.Asset by combining the constituent type, code and
 // issuer, as often retrieved from the DB in 3 separate columns.
 func AssetFromDB(typ xdr.AssetType, code string, issuer string) (result xdr.Asset, err error) {
@@ -175,6 +183,11 @@ func AssetFromDB(typ xdr.AssetType, code string, issuer string) (result xdr.Asse
 	return
 }
 
+func (core *Asset) ToXdrAsset() xdr.Asset {
+	res, _ := AssetFromDB(core.AssetType,
+		core.AssetCode.String, core.Issuer.String)
+	return  res
+}
 // ElderLedger represents the oldest "ingestable" ledger known to the
 // stellar-core database this ingestion system is communicating with.  Horizon,
 // which wants to operate on a contiguous range of ledger data (i.e. free from

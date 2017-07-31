@@ -40,3 +40,4 @@ func (d DummyPath) Source() xdr.Asset                        { return d.source }
 func (d DummyPath) Destination() xdr.Asset                   { return d.destination }
 func (d DummyPath) Path() []xdr.Asset                        { return d.path }
 func (d DummyPath) Cost(amount xdr.Int64) (xdr.Int64, error) { return amount, nil }
+func (d DummyPath) MaxCost() (result xdr.Int64, err error)	 {return }

@@ -131,17 +131,21 @@ type OrderBookSummary struct {
 	Buying  Asset        `json:"counter"`
 }
 
+type BasePath struct {
+	SourceAssetType		    string `json:"source_asset_type"`
+	SourceAssetCode         string  `json:"source_asset_code,omitempty"`
+	SourceAssetIssuer       string  `json:"source_asset_issuer,omitempty"`
+	DestinationAssetType    string  `json:"destination_asset_type"`
+	DestinationAssetCode    string  `json:"destination_asset_code,omitempty"`
+	DestinationAssetIssuer  string  `json:"destination_asset_issuer,omitempty"`
+	Path                   []Asset `json:"path"`
+}
+
 // Path represents a single payment path.
 type Path struct {
-	SourceAssetType        string  `json:"source_asset_type"`
-	SourceAssetCode        string  `json:"source_asset_code,omitempty"`
-	SourceAssetIssuer      string  `json:"source_asset_issuer,omitempty"`
+	BasePath
 	SourceAmount           string  `json:"source_amount"`
-	DestinationAssetType   string  `json:"destination_asset_type"`
-	DestinationAssetCode   string  `json:"destination_asset_code,omitempty"`
-	DestinationAssetIssuer string  `json:"destination_asset_issuer,omitempty"`
 	DestinationAmount      string  `json:"destination_amount"`
-	Path                   []Asset `json:"path"`
 }
 
 // Price represents a price
@@ -152,6 +156,17 @@ type PriceLevel struct {
 	PriceR Price  `json:"price_r"`
 	Price  string `json:"price"`
 	Amount string `json:"amount"`
+}
+
+type Assets struct{
+	BuyingAssets   []Asset `json:"buying_assets"`
+	SellingAssets  []Asset `json:"selling_assets"`
+}
+
+type BenefitExchange struct {
+	FromTo Path  `json:"from_to"`
+	ToFrom Path  `json:"to_from"`
+	Profit string `json:"profit"`
 }
 
 // Root is the initial map of links into the api.

@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	ge "github.com/go-errors/errors"
 	. "github.com/smartystreets/goconvey/convey"
 )

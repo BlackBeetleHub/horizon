@@ -1,9 +1,11 @@
 package horizon
 
 import (
-	"github.com/stellar/horizon/paths"
+	//"github.com/stellar/horizon/simplepath"
 	"github.com/stellar/horizon/render/hal"
 	"github.com/stellar/horizon/resource"
+
+	"github.com/stellar/horizon/paths"
 )
 
 // PathIndexAction provides path finding

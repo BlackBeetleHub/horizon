@@ -9,18 +9,18 @@ import (
 	"github.com/stellar/horizon/paths"
 )
 
-// pathNode implements the paths.Path interface and represents a path
+// PathNode implements the paths.Path interface and represents a path
 // as a linked list pointing from source to destination.
-type pathNode struct {
+type PathNode struct {
 	Asset xdr.Asset
-	Tail  *pathNode
+	Tail  *PathNode
 	Q     *core.Q
 }
 
-// check interface compatibility
-var _ paths.Path = &pathNode{}
 
-func (p *pathNode) String() string {
+var _ paths.Path = &PathNode{}
+
+func (p *PathNode) String() string {
 	if p == nil {
 		return ""
 	}
@@ -39,7 +39,7 @@ func (p *pathNode) String() string {
 }
 
 // Destination implements paths.Path.Destination interface method
-func (p *pathNode) Destination() xdr.Asset {
+func (p *PathNode) Destination() xdr.Asset {
 	cur := p
 	for cur.Tail != nil {
 		cur = cur.Tail
@@ -48,13 +48,13 @@ func (p *pathNode) Destination() xdr.Asset {
 }
 
 // Source implements paths.Path.Source interface method
-func (p *pathNode) Source() xdr.Asset {
+func (p *PathNode) Source() xdr.Asset {
 	// the destination for path is the head of the linked list
 	return p.Asset
 }
 
 // Path implements paths.Path.Path interface method
-func (p *pathNode) Path() []xdr.Asset {
+func (p *PathNode) Path() []xdr.Asset {
 	path := p.Flatten()
 
 	if len(path) < 2 {
@@ -67,7 +67,7 @@ func (p *pathNode) Path() []xdr.Asset {
 }
 
 // Cost implements the paths.Path.Cost interface method
-func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
+func (p *PathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 	result = amount
 
 	if p.Tail == nil {
@@ -77,6 +77,7 @@ func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 	cur := p
 
 	for cur.Tail != nil {
+
 		ob := cur.OrderBook()
 		result, err = ob.Cost(cur.Tail.Asset, result)
 		if err != nil {
@@ -88,8 +89,26 @@ func (p *pathNode) Cost(amount xdr.Int64) (result xdr.Int64, err error) {
 	return
 }
 
+func (p *PathNode) MaxCost() (result xdr.Int64, err error) {
+	if p.Tail == nil {
+		return
+	}
+	cur := p
+	result, _ = cur.OrderBook().MaxAvailebleCost(cur.Tail.Asset)
+	cur = cur.Tail
+	for cur.Tail != nil {
+		ob := cur.OrderBook()
+		result, err = ob.MaxReciveCount(cur.Tail.Asset, result)
+		if err != nil {
+			return
+		}
+		cur = cur.Tail
+	}
+	return
+}
+
 // Depth returns the length of the list
-func (p *pathNode) Depth() int {
+func (p *PathNode) Depth() int {
 	depth := 0
 	cur := p
 	for {
@@ -102,7 +121,7 @@ func (p *pathNode) Depth() int {
 }
 
 // Flatten walks the list and returns a slice of assets
-func (p *pathNode) Flatten() (result []xdr.Asset) {
+func (p *PathNode) Flatten() (result []xdr.Asset) {
 	cur := p
 
 	for {
@@ -114,11 +133,10 @@ func (p *pathNode) Flatten() (result []xdr.Asset) {
 	}
 }
 
-func (p *pathNode) OrderBook() *orderBook {
+func (p *PathNode) OrderBook() *orderBook {
 	if p.Tail == nil {
 		return nil
 	}
-
 	return &orderBook{
 		Selling: p.Tail.Asset,
 		Buying:  p.Asset,
