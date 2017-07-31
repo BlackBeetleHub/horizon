@@ -4,7 +4,6 @@ import (
 	"github.com/stellar/horizon/paths"
 	"github.com/stellar/horizon/db2/core"
 	"github.com/stellar/horizon/simplepath"
-	"strconv"
 )
 
 type Benefits struct {
@@ -23,7 +22,7 @@ func (benefit *Benefits) Init(q *core.Q) error {
 	}
 	benefit.InitPossibleExchanges(coreAssests)
 	benefit.CheckValidExchanges()
-	return nil
+	return err
 }
 
 func (benefit *Benefits) Start() {
@@ -54,26 +53,27 @@ func SwapExchangeAssets(exchange paths.Exchange) paths.Exchange {
 // Check possible Exchanges. It deletes exchange if it doesn't find path forwar or back.
 // Not all assets possible get back.
 func (benefit *Benefits) CheckValidExchanges() {
-	println("Before validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
 	var validateResultWay []paths.CoreExchange
 	for i := 0; i < len(benefit.PossibleExchanges); i++ {
-		var exchange paths.Exchange
-		short := benefit.PossibleExchanges[i]
-		exchange.SourceAsset = short.Source.ToXdrAsset()
-		exchange.DestinationAsset = short.Dest.ToXdrAsset()
-		resBuy, _ := benefit.benefitChecker.FindFromExchange(exchange)
-		if len(resBuy) == 0 {
-			continue;
+		if benefit.ChackValidExchange(&benefit.PossibleExchanges[i]) {
+			validateResultWay = append(validateResultWay, benefit.PossibleExchanges[i])
 		}
-		exchange = SwapExchangeAssets(exchange)
-		resSell, _ := benefit.benefitChecker.FindFromExchange(exchange)
-		if len(resSell) == 0 {
-			continue;
-		}
-		validateResultWay = append(validateResultWay, short)
 	}
 	benefit.PossibleExchanges = validateResultWay
-	println("After validate Exchanges" + strconv.Itoa(len(benefit.PossibleExchanges)))
+}
+
+func (benefit *Benefits) ChackValidExchange(ce *paths.CoreExchange) bool {
+	exchange:= ce.ToExchange()
+	resBuy, _ := benefit.benefitChecker.FindFromExchange(exchange)
+	if len(resBuy) == 0 {
+		return false
+	}
+	exchange = SwapExchangeAssets(exchange)
+	resSell, _ := benefit.benefitChecker.FindFromExchange(exchange)
+	if len(resSell) == 0 {
+		return false
+	}
+	return true
 }
 
 func (benefit *Benefits) GetPathsFromExchange(exchange paths.Exchange) (result []paths.Path, err error) {
@@ -95,7 +95,6 @@ func (benefit *Benefits) SearchBenefits() []BenefitExchange {
 		if len(res) != 0 {
 			benefitExchanges = append(benefitExchanges, res...)
 		}
-		//benefitExchanges = append(benefitExchanges, res...)
 	}
 	return benefitExchanges
 }
@@ -114,8 +113,7 @@ func (benefit *Benefits) SearchBenefitsInExchange(exchange paths.Exchange) []Ben
 		for t := 0; t < len(backs); t++ {
 			isBenefit, profit, err := benefit.isBenefitPaths(fronts[i], backs[t])
 			if err != nil {
-				println("Something wrong: SearchBenefitsInExchange, isBenefitPaths.")
-				println(err.Error())
+				continue
 			}
 			if isBenefit {
 				result = append(result,
@@ -175,14 +173,9 @@ func (benefit *Benefits) isBenefitPaths(front, back paths.Path) (bool, int64, er
 			if err!=nil {
 				return false,0 , err
 			}
-			//println(int64(maxDistBack - maxSourceFront))
-			//print("maxDistBack:" + strconv.FormatInt(int64(maxDistBack),10))
-
-			print("maxSourceFront:" + strconv.FormatInt(int64(maxSourceFront),10))
 			if (maxSourceFront < maxDistBack) {
 				return true, int64(maxDistBack - maxSourceFront), err
 			}
-			//return true,int64(maxDistBack - maxSourceFront) , err
 		}
 	}
 	return false,0, err
